@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: Arcaegium/Arcaegium
+  repo: Arcaegium/arcaegium.github.io
   branch: main
 
 media_folder: assets/portals
