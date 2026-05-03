@@ -101,6 +101,23 @@
       "accent_color_hex": "",
       "image_type": "css_void_green",
       "image": ""
+    },
+    {
+      "id": "portal-07",
+      "sort_order": 7,
+      "visible": true,
+      "gateway_number": "07",
+      "genre_label": "UNKNOWN",
+      "state": "unknown",
+      "title": "",
+      "description": "Coordinates are unstable. This gateway is forming at the edge of known dimensional space. Do not attempt manual entry.",
+      "tag": "Initializing",
+      "url": "",
+      "accent_color_mode": "cycle",
+      "accent_color_palette": "",
+      "accent_color_hex": "",
+      "image_type": "css_none",
+      "image": ""
     }
   ]
 }
