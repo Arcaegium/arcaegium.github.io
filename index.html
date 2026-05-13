@@ -420,7 +420,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     flash.classList.add('on');
     setTimeout(()=>{ window.location.href=url; },380);
   }
-  document.querySelector('.cy-cta').addEventListener('click',e=>{e.preventDefault();nav('/resume/');});
+  document.addEventListener('mouseleave', () => { leanTarget = 0; });
   document.querySelector('.st-cta').addEventListener('click',e=>{e.preventDefault();nav('/workshop/');});
 
 })();
