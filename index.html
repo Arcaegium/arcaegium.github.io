@@ -426,7 +426,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   /* ── NAVIGATION with background takeover ── */
   function nav(url, side){
     leanTarget = leanSmooth;
-    const targetLean = side === 'cyber' ? -1.5 : 1.5;
+    const targetLean = side === 'cyber' ? 5 : -5;
     const startLean  = leanSmooth;
     const startTime  = performance.now();
     const takeover   = 600;
