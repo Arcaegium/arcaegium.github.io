@@ -54,14 +54,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   position:fixed;top:50%;left:50%;
   transform:translate(-50%,-50%);
   z-index:10;
-  width:clamp(90px,12vw,160px);
-  height:clamp(90px,12vw,160px);
+  width:clamp(160px,22vw,300px);
+  height:clamp(160px,22vw,300px);
   pointer-events:none;
 }
 #logoWrap img{
   width:100%;height:100%;object-fit:contain;
-  filter:drop-shadow(0 0 8px rgba(0,212,255,0.5)) drop-shadow(0 0 20px rgba(200,134,10,0.4));
-  animation:spin 50s linear infinite;
+  filter:drop-shadow(0 0 12px rgba(0,212,255,0.5)) drop-shadow(0 0 28px rgba(200,134,10,0.4));
 }
 #logoSvgFallback{width:100%;height:100%;display:none;}
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
@@ -193,22 +192,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 </div>
 
 <div id="logoWrap">
-  <img src="Logo_Pure.png" alt="Arcaegium"
-       onerror="this.style.display='none';document.getElementById('logoSvgFallback').style.display='block'">
-  <svg id="logoSvgFallback" viewBox="0 0 100 100" fill="none">
-    <circle cx="50" cy="50" r="46" stroke="#fff" stroke-width="0.8" stroke-dasharray="3 2" opacity="0.4"/>
-    <circle cx="50" cy="50" r="32" stroke="#fff" stroke-width="0.5" opacity="0.3"/>
-    <line x1="50" y1="4" x2="50" y2="96" stroke="#fff" stroke-width="0.6" opacity="0.4"/>
-    <line x1="4" y1="50" x2="96" y2="50" stroke="#fff" stroke-width="0.6" opacity="0.4"/>
-    <polygon points="50,6 53,42 86,50 53,58 50,94 47,58 14,50 47,42"
-      stroke="#fff" stroke-width="0.6" fill="none" opacity="0.7"/>
-  </svg>
+  <img src="Logo_Pure_transparent.png" alt="Arcaegium">
 </div>
 
+<!-- badge hidden until transparent PNG available
 <div id="badge">
   <img src="Logo_Element.png" alt="Ae 121 360"
        onerror="this.style.display='none'">
 </div>
+-->
 
 <div id="flash"></div>
 
