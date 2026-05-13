@@ -423,41 +423,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   }
   requestAnimationFrame(loop);
 
-  /* ── NAVIGATION with background takeover ── */
-  function nav(url, side){
-    leanTarget = leanSmooth;
-    const targetLean = side === 'cyber' ? -1.5 : 1.5;
-    const startLean  = leanSmooth;
-    const startTime  = performance.now();
-    const takeover   = 600;
-    const hold       = 200;
-    const fadeMs     = 400;
-
-    function animateTakeover(ts){
-      const elapsed  = ts - startTime;
-      const progress = Math.min(elapsed / takeover, 1);
-      const eased    = progress < 0.5
-        ? 2 * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-      leanSmooth = startLean + (targetLean - startLean) * eased;
-      updateClip(leanSmooth);
-      drawDivider(leanSmooth);
-      if (progress < 1){
-        requestAnimationFrame(animateTakeover);
-      } else {
-        setTimeout(()=>{
-          flash.style.background = '#000';
-          flash.classList.add('on');
-          setTimeout(()=>{ window.location.href = url; }, fadeMs);
-        }, hold);
-      }
-    }
-    requestAnimationFrame(animateTakeover);
+  /* ── NAVIGATION ── */
+  function nav(url){
+    flash.classList.add('on');
+    setTimeout(()=>{ window.location.href=url; },380);
   }
-
   document.addEventListener('mouseleave', () => { leanTarget = 0; });
-  document.querySelector('.cy-cta').addEventListener('click',e=>{e.preventDefault();nav('/resume/','cyber');});
-  document.querySelector('.st-cta').addEventListener('click',e=>{e.preventDefault();nav('/workshop/','steam');});
+  document.querySelector('.st-cta').addEventListener('click',e=>{e.preventDefault();nav('/workshop/');});
 
 })();
 
