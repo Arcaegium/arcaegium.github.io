@@ -20,7 +20,7 @@
 html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshair;}
 
 /* panes */
-/* ── FULL BACKGROUND LAYERS (behind clips, always cover full screen) ── */
+/* ── FULL BACKGROUND LAYERS ── */
 #bgCyber {
   position:fixed;inset:0;z-index:3;
   background:url('assets/backgrounds/Worker_Background.png') center center / cover no-repeat;
@@ -28,6 +28,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 #bgSteam {
   position:fixed;inset:0;z-index:4;
   background:url('assets/backgrounds/Workshop_Background.png') center center / cover no-repeat;
+  clip-path:polygon(100% 0,100% 100%,0 100%);
+  transition:clip-path 0.7s cubic-bezier(0.25,1,0.5,1);
 }
 
 #paneCyber{
@@ -281,14 +283,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     return {ax,ay,bx,by};
   }
 
+  const bgSteam = document.getElementById('bgSteam');
+
   function updateClip(lean){
     const {ax,ay,bx,by} = getLine(lean);
-    /* Cyber = upper-left triangle: corners (0,0) + two line points */
     paneCyber.style.clipPath =
       `polygon(0px 0px, ${ax}px ${ay}px, ${bx}px ${by}px, 0px ${H}px)`;
-    /* Steam = lower-right triangle: line points + corners (W,0),(W,H) */
-    paneSteam.style.clipPath =
-      `polygon(${ax}px ${ay}px, ${W}px 0px, ${W}px ${H}px, ${bx}px ${by}px)`;
+    const steamPoly = `polygon(${ax}px ${ay}px, ${W}px 0px, ${W}px ${H}px, ${bx}px ${by}px)`;
+    paneSteam.style.clipPath = steamPoly;
+    bgSteam.style.clipPath   = steamPoly;
   }
 
   /* ── DIVIDER ── */
@@ -418,6 +421,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   document.querySelector('.st-cta').addEventListener('click',e=>{e.preventDefault();nav('/workshop/');});
 
 })();
+
+/* ── BFCACHE FIX ── */
+window.addEventListener('pageshow', e => {
+  if (e.persisted) window.location.reload();
+});
 </script>
 </body>
 </html>
