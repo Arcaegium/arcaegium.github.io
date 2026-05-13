@@ -290,7 +290,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
        Also need top-right if line has moved past it, but covering
        all four corners of the upper-left half:
        (0,0) → (ax,ay) → (bx,by) → (0,H) */
-    const cyberPoly = `polygon(0px 0px, ${ax}px ${ay}px, ${bx}px ${by}px, 0px ${H}px, 0px 0px)`;
+    const cyberPoly = `polygon(0px 0px, ${W}px 0px, ${ax}px ${ay}px, ${bx}px ${by}px, 0px ${H}px)`;
     /* Steam = lower-right side of diagonal:
        A → top-right (W,0) → bottom-right (W,H) → B
        Need to also cover bottom-left corner when steam is winning:
