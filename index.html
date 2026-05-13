@@ -254,7 +254,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   document.addEventListener('mousemove', e => {
     const val = e.clientX/W + e.clientY/H;
     const raw = (1 - val) * 1.5;
-    leanTarget = Math.max(-0.65, Math.min(0.65, raw));
+    leanTarget = Math.max(-0.55, Math.min(0.55, raw));
   });
 
   /* ── CLIP PATH ──
@@ -268,15 +268,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
      Offset magnitude = lean * 0.25 * min(W,H)
   */
   function getLine(lean){
-    const mag   = lean * 0.25 * Math.min(W,H);
-    const len   = Math.sqrt(W*W + H*H);
-    const px    = H/len;
-    const py    = W/len;
-    /* clamp both endpoints strictly inside the viewport */
-    const ax = Math.max(0, Math.min(W, W + px*mag));
-    const ay = Math.max(0, Math.min(H, 0 + py*mag));
-    const bx = Math.max(0, Math.min(W, 0 + px*mag));
-    const by = Math.max(0, Math.min(H, H + py*mag));
+    const mag = lean * 0.25 * Math.min(W,H);
+    const len = Math.sqrt(W*W + H*H);
+    const px  = H/len;
+    const py  = W/len;
+    /* allow endpoints to go off-screen so polygons always fully cover */
+    const ax = W + px*mag;
+    const ay = 0 + py*mag;
+    const bx = 0 + px*mag;
+    const by = H + py*mag;
     return {ax,ay,bx,by};
   }
 
@@ -285,7 +285,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 
   function updateClip(lean){
     const {ax,ay,bx,by} = getLine(lean);
+    /* Cyber = everything upper-left of the line
+       Goes: top-left → A (on top edge) → B (on bottom edge) → bottom-left */
     const cyberPoly = `polygon(0px 0px, ${ax}px ${ay}px, ${bx}px ${by}px, 0px ${H}px)`;
+    /* Steam = everything lower-right of the line
+       Goes: A (on top edge) → top-right → bottom-right → B (on bottom edge) */
     const steamPoly = `polygon(${ax}px ${ay}px, ${W}px 0px, ${W}px ${H}px, ${bx}px ${by}px)`;
     paneCyber.style.clipPath = cyberPoly;
     bgCyber.style.clipPath   = cyberPoly;
