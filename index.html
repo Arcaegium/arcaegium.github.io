@@ -270,12 +270,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   function getLine(lean){
     const mag   = lean * 0.25 * Math.min(W,H);
     const len   = Math.sqrt(W*W + H*H);
-    const px    = H/len;   /* perpendicular x component */
-    const py    = W/len;   /* perpendicular y component */
-    const ax    = W + px*mag;
-    const ay    = 0 + py*mag;
-    const bx    = 0 + px*mag;
-    const by    = H + py*mag;
+    const px    = H/len;
+    const py    = W/len;
+    /* clamp both endpoints strictly inside the viewport */
+    const ax = Math.max(0, Math.min(W, W + px*mag));
+    const ay = Math.max(0, Math.min(H, 0 + py*mag));
+    const bx = Math.max(0, Math.min(W, 0 + px*mag));
+    const by = Math.max(0, Math.min(H, H + py*mag));
     return {ax,ay,bx,by};
   }
 
@@ -403,7 +404,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     const dt=Math.min(ts-last, 50); /* cap dt to avoid huge jumps after tab switch */
     last=ts;
     /* frame-rate independent smoothing: decay constant ~8 per second */
-    const alpha = 1 - Math.exp(-8 * dt / 1000);
+    const alpha = 1 - Math.exp(-3 * dt / 1000);
     leanSmooth += (leanTarget - leanSmooth) * alpha;
     updateClip(leanSmooth);
     drawDivider(leanSmooth);
