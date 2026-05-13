@@ -20,27 +20,32 @@
 html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshair;}
 
 /* panes */
+/* ── FULL BACKGROUND LAYERS (behind clips, always cover full screen) ── */
+#bgCyber {
+  position:fixed;inset:0;z-index:3;
+  background:url('assets/backgrounds/Worker_Background.png') center center / cover no-repeat;
+}
+#bgSteam {
+  position:fixed;inset:0;z-index:4;
+  background:url('assets/backgrounds/Workshop_Background.png') center center / cover no-repeat;
+}
+
 #paneCyber{
   position:fixed;inset:0;z-index:5;
-  background:url('assets/backgrounds/Worker_Background.png') center center / cover no-repeat;
+  background:transparent;
   clip-path:polygon(0 0,100% 0,0 100%);
   transition:clip-path 0.7s cubic-bezier(0.25,1,0.5,1);
 }
 #paneCyber::before{
   content:'';position:absolute;inset:0;
-  background:rgba(2,10,16,0.45);
   background-image:repeating-linear-gradient(0deg,rgba(0,212,255,0.025) 0px,transparent 1px,transparent 3px);
   pointer-events:none;
 }
 #paneSteam{
   position:fixed;inset:0;z-index:5;
-  background:url('assets/backgrounds/Workshop_Background.png') center center / cover no-repeat;
+  background:transparent;
   clip-path:polygon(100% 0,100% 100%,0 100%);
   transition:clip-path 0.7s cubic-bezier(0.25,1,0.5,1);
-}
-#paneSteam::before{
-  content:'';position:absolute;inset:0;
-  background:rgba(13,8,5,0.35);
   pointer-events:none;
 }
 
@@ -172,6 +177,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 </head>
 <body>
 
+<div id="bgCyber"></div>
+<div id="bgSteam"></div>
 <div id="paneCyber"></div>
 <div id="paneSteam"></div>
 <canvas id="cvsCyber"></canvas>
@@ -193,7 +200,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 </div>
 
 <div id="logoWrap">
-  <img src="assets/logos/Logo_Pure_transparent.png" alt="Arcaegium">
+  <img src="assets/logos/Logo_Circle.png" alt="Arcaegium">
 </div>
 
 <!-- badge hidden until transparent PNG available
@@ -249,7 +256,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   document.addEventListener('mousemove', e => {
     const val = e.clientX/W + e.clientY/H;
     const raw = (1 - val) * 1.5;
-    leanTarget = Math.max(-1, Math.min(1, raw));
+    leanTarget = Math.max(-0.65, Math.min(0.65, raw));
   });
 
   /* ── CLIP PATH ──
