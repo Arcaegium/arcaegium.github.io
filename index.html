@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARCAEGIUM — Ae · 121 · 360</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --cyber-bg:#020a10;
+  --cyber-accent:#00d4ff;
+  --cyber-glow:rgba(0,212,255,0.35);
+  --cyber-text:#a0e8f0;
+  --steam-bg:#0d0805;
+  --steam-accent:#c8860a;
+  --steam-glow:rgba(200,134,10,0.35);
+  --steam-text:#d4aa70;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshair;}
+
+/* panes */
+#paneCyber{
+  position:fixed;inset:0;z-index:5;
+  background:var(--cyber-bg);
+  clip-path:polygon(0 0,100% 0,0 100%);
+  transition:clip-path 0.7s cubic-bezier(0.25,1,0.5,1);
+}
+#paneCyber::before{
+  content:'';position:absolute;inset:0;
+  background-image:repeating-linear-gradient(0deg,rgba(0,212,255,0.025) 0px,transparent 1px,transparent 3px);
+  pointer-events:none;
+}
+#paneSteam{
+  position:fixed;inset:0;z-index:5;
+  background:var(--steam-bg);
+  clip-path:polygon(100% 0,100% 100%,0 100%);
+  transition:clip-path 0.7s cubic-bezier(0.25,1,0.5,1);
+}
+#paneSteam::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 80% at 80% 80%,rgba(200,134,10,0.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+/* canvases */
+#cvsCyber,#cvsSteam,#cvsDivider{position:fixed;inset:0;pointer-events:none;}
+#cvsCyber{z-index:6;}
+#cvsSteam{z-index:6;}
+#cvsDivider{z-index:7;}
+
+/* logo */
+#logoWrap{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:10;
+  width:clamp(90px,12vw,160px);
+  height:clamp(90px,12vw,160px);
+  pointer-events:none;
+}
+#logoWrap img{
+  width:100%;height:100%;object-fit:contain;
+  filter:drop-shadow(0 0 8px rgba(0,212,255,0.5)) drop-shadow(0 0 20px rgba(200,134,10,0.4));
+  animation:spin 50s linear infinite;
+}
+#logoSvgFallback{width:100%;height:100%;display:none;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* worker content - upper left */
+#workerContent{
+  position:fixed;top:9vh;left:5vw;
+  z-index:8;max-width:38vw;
+  opacity:0;animation:fadeUp 1s ease forwards 0.4s;
+}
+.cy-eye{
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.5rem,0.85vw,0.62rem);
+  letter-spacing:0.45em;color:var(--cyber-accent);
+  opacity:0.5;text-transform:uppercase;margin-bottom:0.5rem;
+}
+.cy-title{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(1.5rem,3.2vw,2.6rem);
+  font-weight:900;letter-spacing:0.06em;
+  color:#fff;line-height:1.05;
+  text-shadow:0 0 18px var(--cyber-glow);
+}
+.cy-desc{
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.52rem,0.88vw,0.65rem);
+  letter-spacing:0.14em;color:var(--cyber-text);
+  opacity:0.5;line-height:1.9;margin-top:0.7rem;
+}
+.cy-cta{
+  display:inline-block;margin-top:1rem;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.58rem;letter-spacing:0.32em;
+  color:var(--cyber-accent);text-transform:uppercase;
+  padding:0.35rem 0.8rem;border:1px solid var(--cyber-accent);
+  opacity:0.65;cursor:pointer;text-decoration:none;
+  transition:opacity 0.3s,box-shadow 0.3s;
+}
+.cy-cta:hover{opacity:1;box-shadow:0 0 14px var(--cyber-glow);}
+.cy-cta::after{content:' ▶';}
+
+/* workshop content - lower right */
+#workshopContent{
+  position:fixed;bottom:9vh;right:5vw;
+  z-index:8;max-width:38vw;text-align:right;
+  opacity:0;animation:fadeUp 1s ease forwards 0.7s;
+}
+.st-eye{
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(0.5rem,0.85vw,0.62rem);
+  letter-spacing:0.28em;color:var(--steam-accent);
+  opacity:0.5;text-transform:uppercase;
+  font-style:italic;margin-bottom:0.5rem;
+}
+.st-title{
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(1.5rem,3.2vw,2.6rem);
+  font-weight:700;color:#fff;line-height:1.1;
+  text-shadow:0 0 18px var(--steam-glow);
+}
+.st-desc{
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(0.52rem,0.88vw,0.65rem);
+  letter-spacing:0.05em;color:var(--steam-text);
+  opacity:0.5;line-height:1.9;font-style:italic;margin-top:0.7rem;
+}
+.st-cta{
+  display:inline-block;margin-top:1rem;
+  font-family:'Libre Baskerville',serif;
+  font-size:0.58rem;letter-spacing:0.22em;
+  color:var(--steam-accent);text-transform:uppercase;
+  padding:0.35rem 0.8rem;border:1px solid var(--steam-accent);
+  opacity:0.65;cursor:pointer;text-decoration:none;
+  font-style:italic;transition:opacity 0.3s,box-shadow 0.3s;
+}
+.st-cta:hover{opacity:1;box-shadow:0 0 14px var(--steam-glow);}
+.st-cta::before{content:'◀ ';}
+
+/* terminal ambient */
+#termLines{
+  position:fixed;top:0;left:0;
+  width:50vw;height:50vh;z-index:6;
+  pointer-events:none;overflow:hidden;
+  padding:0.8rem 1.2rem;opacity:0.055;
+  display:flex;flex-direction:column;
+  justify-content:flex-end;gap:1px;
+}
+.tline{
+  font-family:'VT323',monospace;
+  font-size:0.68rem;color:#00d4ff;
+  letter-spacing:0.07em;white-space:nowrap;
+}
+
+/* element badge */
+#badge{
+  position:fixed;bottom:1.5rem;left:1.5rem;
+  z-index:9;width:clamp(38px,4.5vw,58px);
+  opacity:0.18;transition:opacity 0.4s;
+}
+#badge:hover{opacity:0.55;}
+
+/* flash */
+#flash{position:fixed;inset:0;z-index:20;background:#000;opacity:0;pointer-events:none;transition:opacity 0.35s;}
+#flash.on{opacity:1;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div id="paneCyber"></div>
+<div id="paneSteam"></div>
+<canvas id="cvsCyber"></canvas>
+<canvas id="cvsSteam"></canvas>
+<canvas id="cvsDivider"></canvas>
+
+<div id="termLines"></div>
+
+<div id="workerContent">
+  <p class="cy-eye">Gateway I &nbsp;·&nbsp; The Worker</p>
+  <h2 class="cy-title">The Worker</h2>
+  <a class="cy-cta" href="/resume/">Access File</a>
+</div>
+
+<div id="workshopContent">
+  <p class="st-eye">Gateway II &nbsp;·&nbsp; The Workshop</p>
+  <h2 class="st-title">The Workshop</h2>
+  <a class="st-cta" href="/workshop/">Enter Workshop</a>
+</div>
+
+<div id="logoWrap">
+  <img src="assets/logo/Logo_Pure.png" alt="Arcaegium"
+       onerror="this.style.display='none';document.getElementById('logoSvgFallback').style.display='block'">
+  <svg id="logoSvgFallback" viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="50" r="46" stroke="#fff" stroke-width="0.8" stroke-dasharray="3 2" opacity="0.4"/>
+    <circle cx="50" cy="50" r="32" stroke="#fff" stroke-width="0.5" opacity="0.3"/>
+    <line x1="50" y1="4" x2="50" y2="96" stroke="#fff" stroke-width="0.6" opacity="0.4"/>
+    <line x1="4" y1="50" x2="96" y2="50" stroke="#fff" stroke-width="0.6" opacity="0.4"/>
+    <polygon points="50,6 53,42 86,50 53,58 50,94 47,58 14,50 47,42"
+      stroke="#fff" stroke-width="0.6" fill="none" opacity="0.7"/>
+  </svg>
+</div>
+
+<div id="badge">
+  <img src="assets/logo/element-tile.png" alt="Ae 121 360"
+       onerror="this.style.display='none'">
+</div>
+
+<div id="flash"></div>
+
+<script>
+(function(){
+  /* ── ELEMENTS ── */
+  const paneCyber  = document.getElementById('paneCyber');
+  const paneSteam  = document.getElementById('paneSteam');
+  const cvsCyber   = document.getElementById('cvsCyber');
+  const cvsSteam   = document.getElementById('cvsSteam');
+  const cvsDivider = document.getElementById('cvsDivider');
+  const cyCtx      = cvsCyber.getContext('2d');
+  const stCtx      = cvsSteam.getContext('2d');
+  const dCtx       = cvsDivider.getContext('2d');
+  const flash      = document.getElementById('flash');
+
+  let W, H;
+  let leanTarget = 0;   /* -1=full cyber, +1=full steam */
+  let leanSmooth = 0;
+
+  /* ── RESIZE ── */
+  function resize(){
+    W = window.innerWidth; H = window.innerHeight;
+    [cvsCyber,cvsSteam,cvsDivider].forEach(c=>{c.width=W;c.height=H;});
+    initCyberP(); initSteamP();
+  }
+  window.addEventListener('resize',resize);
+
+  /* ── MOUSE LEAN ──
+     Diagonal: top-right (W,0) → bottom-left (0,H)
+     Point on that line at midpoint: (W/2, H/2)
+     
+     We determine which side of the line the mouse is on,
+     and how far, to set lean.
+     
+     Line equation: x/W + y/H = 1  (top-right to bottom-left)
+     For a point (mx,my): val = mx/W + my/H
+       val < 1 → upper-left (cyber side)
+       val > 1 → lower-right (steam side)
+       val = 1 → on the line
+     
+     lean = (val - 1) * 2, clamped to -1..+1
+     lean < 0 = cyber winning, lean > 0 = steam winning
+  */
+  document.addEventListener('mousemove', e => {
+    const val = e.clientX/W + e.clientY/H;
+    const raw = (1 - val) * 1.5;
+    leanTarget = Math.max(-1, Math.min(1, raw));
+  });
+
+  /* ── CLIP PATH ──
+     The diagonal line goes from point A (on top or right edge)
+     to point B (on bottom or left edge).
+     
+     At lean=0: A=(W,0), B=(0,H)  — true corner to corner
+     We offset both points perpendicular to the line.
+     
+     Perpendicular direction to (W,0)→(0,H) is (H,W)/sqrt(H²+W²)
+     Offset magnitude = lean * 0.25 * min(W,H)
+  */
+  function getLine(lean){
+    const mag   = lean * 0.25 * Math.min(W,H);
+    const len   = Math.sqrt(W*W + H*H);
+    const px    = H/len;   /* perpendicular x component */
+    const py    = W/len;   /* perpendicular y component */
+    const ax    = W + px*mag;
+    const ay    = 0 + py*mag;
+    const bx    = 0 + px*mag;
+    const by    = H + py*mag;
+    return {ax,ay,bx,by};
+  }
+
+  function updateClip(lean){
+    const {ax,ay,bx,by} = getLine(lean);
+    /* Cyber = upper-left triangle: corners (0,0) + two line points */
+    paneCyber.style.clipPath =
+      `polygon(0px 0px, ${ax}px ${ay}px, ${bx}px ${by}px, 0px ${H}px)`;
+    /* Steam = lower-right triangle: line points + corners (W,0),(W,H) */
+    paneSteam.style.clipPath =
+      `polygon(${ax}px ${ay}px, ${W}px 0px, ${W}px ${H}px, ${bx}px ${by}px)`;
+  }
+
+  /* ── DIVIDER ── */
+  function drawDivider(lean){
+    dCtx.clearRect(0,0,W,H);
+    const {ax,ay,bx,by} = getLine(lean);
+
+    const g = dCtx.createLinearGradient(ax,ay,bx,by);
+    g.addColorStop(0,  'rgba(0,212,255,0.0)');
+    g.addColorStop(0.2,'rgba(0,212,255,0.6)');
+    g.addColorStop(0.5,'rgba(255,255,255,0.9)');
+    g.addColorStop(0.8,'rgba(200,134,10,0.6)');
+    g.addColorStop(1,  'rgba(200,134,10,0.0)');
+
+    /* glow */
+    dCtx.beginPath(); dCtx.moveTo(ax,ay); dCtx.lineTo(bx,by);
+    dCtx.strokeStyle='rgba(180,180,180,0.05)'; dCtx.lineWidth=18; dCtx.stroke();
+    dCtx.beginPath(); dCtx.moveTo(ax,ay); dCtx.lineTo(bx,by);
+    dCtx.strokeStyle='rgba(180,180,180,0.10)'; dCtx.lineWidth=5; dCtx.stroke();
+    /* core */
+    dCtx.beginPath(); dCtx.moveTo(ax,ay); dCtx.lineTo(bx,by);
+    dCtx.strokeStyle=g; dCtx.lineWidth=1.5; dCtx.stroke();
+  }
+
+  /* ── CYBER PARTICLES ── */
+  let cyP=[];
+  function initCyberP(){
+    cyP=[];
+    for(let i=0;i<55;i++) cyP.push({
+      x:Math.random()*W*0.52,
+      y:Math.random()*H*0.52,
+      vy:-(Math.random()*0.25+0.08),
+      a:Math.random()*0.35+0.08,
+      r:Math.random()*1.2+0.3,
+    });
+  }
+  function drawCyber(t){
+    cyCtx.clearRect(0,0,W,H);
+    /* scan line */
+    const sy=(t*55)%H;
+    const sg=cyCtx.createLinearGradient(0,sy-1,0,sy+1);
+    sg.addColorStop(0,'transparent');
+    sg.addColorStop(0.5,'rgba(0,212,255,0.05)');
+    sg.addColorStop(1,'transparent');
+    cyCtx.fillStyle=sg; cyCtx.fillRect(0,sy-1,W*0.55,2);
+    /* particles */
+    cyP.forEach(p=>{
+      p.y+=p.vy;
+      if(p.y<0){p.y=H*0.55;p.x=Math.random()*W*0.55;}
+      cyCtx.beginPath(); cyCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      cyCtx.fillStyle=`rgba(0,212,255,${p.a*0.35})`; cyCtx.fill();
+    });
+  }
+
+  /* ── STEAM PARTICLES — embers ── */
+  let stP=[];
+  function initSteamP(){
+    stP=[];
+    for(let i=0;i<45;i++) stP.push({
+      x:W*0.48+Math.random()*W*0.52,
+      y:H*0.48+Math.random()*H*0.52,
+      vy:-(Math.random()*0.35+0.08),
+      vx:(Math.random()-0.5)*0.15,
+      a:Math.random()*0.25+0.05,
+      r:Math.random()*1.8+0.4,
+      warm:Math.random()<0.6,
+    });
+  }
+  function drawSteam(){
+    stCtx.clearRect(0,0,W,H);
+    stP.forEach(p=>{
+      p.y+=p.vy; p.x+=p.vx;
+      if(p.y<H*0.38){p.y=H;p.x=W*0.48+Math.random()*W*0.52;}
+      if(p.x<W*0.38){p.x=W*0.5+Math.random()*W*0.5;}
+      if(p.x>W)     {p.x=W*0.5+Math.random()*W*0.45;}
+      const col=p.warm
+        ?`rgba(200,134,10,${p.a})`
+        :`rgba(180,70,0,${p.a*0.7})`;
+      stCtx.beginPath(); stCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      stCtx.fillStyle=col; stCtx.fill();
+    });
+  }
+
+  /* ── TERMINAL LINES ── */
+  const TLINES=[
+    '> INITIALIZING ARCAEGIUM PROTOCOL...',
+    '> AUTH: SESSION ACTIVE — TOKEN VALID',
+    '> PORTFOLIO_LOAD: 18YRS_EXPERIENCE.dat',
+    '> VENDOR.ecosystem: 100+ NODES MAPPED',
+    '> REVENUE.stream: $6.5M — ACTIVE',
+    '> RETENTION.index: 97.0% — NOMINAL',
+    '> C-SUITE INTERFACE: READY',
+    '> SALESFORCE.arch: OPTIMIZED',
+    '> SOLUTION.engine: ONLINE',
+    '> TAM_PROTOCOL: ENGAGED',
+    '> DISCOVERY.module: STANDBY',
+    '> ARCAEGIUM.os: v1.21.360',
+  ];
+  const tDiv=document.getElementById('termLines');
+  TLINES.forEach(txt=>{
+    const d=document.createElement('div');
+    d.className='tline'; d.textContent=txt; tDiv.appendChild(d);
+  });
+
+  /* ── LOOP ── */
+  let last=0;
+  resize();
+
+  function loop(ts){
+    const t=ts/1000;
+    last=ts;
+    leanSmooth+=(leanTarget-leanSmooth)*0.045;
+    updateClip(leanSmooth);
+    drawDivider(leanSmooth);
+    drawCyber(t);
+    drawSteam();
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  /* ── NAVIGATION ── */
+  function nav(url){
+    flash.classList.add('on');
+    setTimeout(()=>{ window.location.href=url; },380);
+  }
+  document.querySelector('.cy-cta').addEventListener('click',e=>{e.preventDefault();nav('/resume/');});
+  document.querySelector('.st-cta').addEventListener('click',e=>{e.preventDefault();nav('/workshop/');});
+
+})();
+</script>
+</body>
+</html>
