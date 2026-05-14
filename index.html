@@ -166,6 +166,25 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 }
 #badge:hover{opacity:0.55;}
 
+/* footer */
+#footer{
+  position:fixed;bottom:0;left:0;right:0;
+  z-index:9;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0.5rem 1.5rem;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.55rem;letter-spacing:0.2em;
+  color:rgba(255,255,255,0.35);
+  text-transform:uppercase;
+  border-top:1px solid rgba(255,255,255,0.08);
+  background:rgba(0,0,0,0.25);
+  backdrop-filter:blur(4px);
+  pointer-events:none;
+}
+.foot-left{color:var(--cyber-accent);opacity:0.5;}
+.foot-center{color:rgba(255,255,255,0.25);}
+.foot-right{color:var(--steam-accent);opacity:0.5;}
+
 /* flash */
 #flash{position:fixed;inset:0;z-index:20;background:#000;opacity:0;pointer-events:none;transition:opacity 0.35s;}
 #flash.on{opacity:1;}
@@ -207,6 +226,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
        onerror="this.style.display='none'">
 </div>
 -->
+
+<div id="footer">
+  <span class="foot-left">Ae &nbsp;·&nbsp; 121 &nbsp;·&nbsp; 360</span>
+  <span class="foot-center">© 2026 Arcaegium ™ &nbsp;·&nbsp; All rights reserved</span>
+  <span class="foot-right">arcaegium.com</span>
+</div>
 
 <div id="flash"></div>
 
@@ -413,7 +438,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     const dt=Math.min(ts-last, 50);
     last=ts;
     if(!navigating){
-      const alpha = 1 - Math.exp(-3 * dt / 1000);
+      const alpha = 1 - Math.exp(-1 * dt / 1000);
       leanSmooth += (leanTarget - leanSmooth) * alpha;
       updateClip(leanSmooth);
       drawDivider(leanSmooth);
