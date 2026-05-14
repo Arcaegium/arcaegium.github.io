@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ARCAEGIUM — Ae · 121 · 360</title>
+<link rel="icon" type="image/png" href="assets/logos/Logo_Element_brass.png">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -170,20 +171,29 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 #footer{
   position:fixed;bottom:0;left:0;right:0;
   z-index:9;
-  display:flex;justify-content:space-between;align-items:center;
+  display:flex;justify-content:center;align-items:center;
   padding:0.5rem 1.5rem;
   font-family:'Share Tech Mono',monospace;
   font-size:0.55rem;letter-spacing:0.2em;
-  color:rgba(255,255,255,0.35);
   text-transform:uppercase;
   border-top:1px solid rgba(255,255,255,0.08);
   background:rgba(0,0,0,0.25);
   backdrop-filter:blur(4px);
   pointer-events:none;
 }
-.foot-left{color:var(--cyber-accent);opacity:0.5;}
-.foot-center{color:rgba(255,255,255,0.25);}
-.foot-right{color:var(--steam-accent);opacity:0.5;}
+.foot-center{color:rgba(255,255,255,0.4);}
+
+/* element corner mark */
+#elementMark{
+  position:fixed;
+  top:1.2rem;left:1.2rem;
+  z-index:9;
+  width:clamp(40px,5vw,65px);
+  height:clamp(40px,5vw,65px);
+  opacity:0.7;
+  pointer-events:none;
+}
+#elementMark img{width:100%;height:100%;object-fit:contain;}
 
 /* flash */
 #flash{position:fixed;inset:0;z-index:20;background:#000;opacity:0;pointer-events:none;transition:opacity 0.35s;}
@@ -227,10 +237,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 </div>
 -->
 
+<div id="elementMark">
+  <img src="assets/logos/Logo_Element_brass.png" alt="Ae">
+</div>
+
 <div id="footer">
-  <span class="foot-left">Ae &nbsp;·&nbsp; 121 &nbsp;·&nbsp; 360</span>
-  <span class="foot-center">© 2026 Arcaegium ™ &nbsp;·&nbsp; All rights reserved</span>
-  <span class="foot-right">arcaegium.com</span>
+  <span class="foot-center">ARCAEGIUM.COM &nbsp;&#11825;&nbsp; © 2026 ARCAEGIUM ™ &nbsp;&#11825;&nbsp; ALL RIGHTS RESERVED</span>
 </div>
 
 <div id="flash"></div>
