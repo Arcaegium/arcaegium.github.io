@@ -99,11 +99,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 .st-cta:hover{opacity:1;box-shadow:0 0 14px var(--cyber-glow);}
 .st-cta::before{content:'◀ ';}
 
-/* ── LOGO ── z-index above fx canvas ── */
+/* ── LOGO ── below fx canvas so particles render over it ── */
 #logoWrap{
   position:fixed;top:50%;left:50%;
   transform:translate(-50%,-50%);
-  z-index:6;
+  z-index:4;
   width:clamp(160px,22vw,300px);
   height:clamp(160px,22vw,300px);
   pointer-events:none;
@@ -269,12 +269,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     bgCtx.restore();
   }
 
-  /* ── DRAW OVERLAY — scanlines on cyber side ── */
+  /* ── DRAW OVERLAY — scanlines on cyber side only ── */
   function drawOverlay(lean, t){
     ovCtx.clearRect(0,0,W,H);
     const {ax,ay,bx,by} = getLine(lean);
 
-    /* clip to cyber polygon for scanlines */
     ovCtx.save();
     ovCtx.beginPath();
     ovCtx.moveTo(0,0); ovCtx.lineTo(W,0);
@@ -282,70 +281,31 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     ovCtx.lineTo(0,H); ovCtx.closePath();
     ovCtx.clip();
 
-    /* horizontal scanline sweep */
     const sy = (t*55)%H;
     const sg = ovCtx.createLinearGradient(0,sy-1,0,sy+1);
     sg.addColorStop(0,'transparent');
     sg.addColorStop(0.5,'rgba(0,212,255,0.05)');
     sg.addColorStop(1,'transparent');
     ovCtx.fillStyle=sg; ovCtx.fillRect(0,sy-1,W,2);
-
-    /* ambient cyber particles */
-    cyP.forEach(p=>{
-      p.y+=p.vy;
-      if(p.y<0){ const r=randomCyberPos(); p.x=r.x; p.y=r.y; }
-      ovCtx.beginPath(); ovCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ovCtx.fillStyle=`rgba(0,212,255,${p.a*0.35})`; ovCtx.fill();
-    });
-    ovCtx.restore();
-
-    /* steam ember particles — clip to steam polygon */
-    ovCtx.save();
-    ovCtx.beginPath();
-    ovCtx.moveTo(ax,ay); ovCtx.lineTo(W,0);
-    ovCtx.lineTo(W,H); ovCtx.lineTo(0,H);
-    ovCtx.lineTo(bx,by); ovCtx.closePath();
-    ovCtx.clip();
-    stP.forEach(p=>{
-      p.y+=p.vy; p.x+=p.vx;
-      if(p.y<0){ const r=randomSteamPos(); p.x=r.x; p.y=r.y; }
-      const col=p.warm?`rgba(200,134,10,${p.a})`:`rgba(180,70,0,${p.a*0.7})`;
-      ovCtx.beginPath(); ovCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ovCtx.fillStyle=col; ovCtx.fill();
-    });
     ovCtx.restore();
   }
 
-  /* ── PARTICLE SYSTEMS ── */
+  /* ── PARTICLE SYSTEMS ── ambient particles removed, only logo particles remain ── */
   let cyP=[], stP=[];
 
   function randomCyberPos(){
-    /* random point guaranteed to be on cyber side (upper-left of diagonal) */
     let x, y;
     do { x=Math.random()*W; y=Math.random()*H; } while(x/W+y/H>=1);
     return {x,y};
   }
   function randomSteamPos(){
-    /* random point guaranteed to be on steam side (lower-right of diagonal) */
     let x, y;
     do { x=Math.random()*W; y=Math.random()*H; } while(x/W+y/H<=1);
     return {x,y};
   }
 
-  function initCyberP(){
-    cyP=[];
-    for(let i=0;i<55;i++){
-      const {x,y} = randomCyberPos();
-      cyP.push({x, y, vy:-(Math.random()*0.25+0.08), a:Math.random()*0.35+0.08, r:Math.random()*1.2+0.3});
-    }
-  }
-  function initSteamP(){
-    stP=[];
-    for(let i=0;i<45;i++){
-      const {x,y} = randomSteamPos();
-      stP.push({x, y, vy:-(Math.random()*0.35+0.08), vx:(Math.random()-0.5)*0.15, a:Math.random()*0.25+0.05, r:Math.random()*1.8+0.4, warm:Math.random()<0.6});
-    }
-  }
+  function initCyberP(){ cyP=[]; }
+  function initSteamP(){ stP=[]; }
 
   /* ── DIVIDER LINE ── */
   function drawDivider(lean){
@@ -376,18 +336,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     const len = Math.sqrt((bx-ax)**2+(by-ay)**2);
     const px  = -(by-ay)/len;
     const py  =  (bx-ax)/len;
-    const reach = 8 + Math.random()*18;
+    const reach = 20 + Math.random()*40;   /* bigger reach */
     const pts   = [{x:ox,y:oy}];
-    const steps = 4 + Math.floor(Math.random()*4);
+    const steps = 6 + Math.floor(Math.random()*5);
     for(let i=1;i<=steps;i++){
       const frac = i/steps;
       pts.push({
-        x: ox + px*reach*Math.sin(frac*Math.PI) + (Math.random()-0.5)*6,
-        y: oy + py*reach*Math.sin(frac*Math.PI) + (Math.random()-0.5)*6,
+        x: ox + px*reach*Math.sin(frac*Math.PI) + (Math.random()-0.5)*12,
+        y: oy + py*reach*Math.sin(frac*Math.PI) + (Math.random()-0.5)*12,
       });
     }
     pts.push({x:ox,y:oy});
-    arcs.push({pts, born:now, life:120+Math.random()*180, isCyber:Math.random()<0.5});
+    arcs.push({pts, born:now, life:150+Math.random()*250, isCyber:Math.random()<0.5});
   }
 
   function drawArcs(now){
@@ -395,12 +355,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
       const arc = arcs[i];
       const age = (now-arc.born)/arc.life;
       if(age>=1){arcs.splice(i,1);continue;}
-      const al  = Math.sin(age*Math.PI)*0.8;
+      const al  = Math.sin(age*Math.PI)*1.0;   /* full opacity at peak */
       const col = arc.isCyber?`rgba(0,212,255,${al})`:`rgba(200,134,10,${al})`;
+      /* glow pass */
       fxCtx.beginPath();
       fxCtx.moveTo(arc.pts[0].x,arc.pts[0].y);
       arc.pts.slice(1).forEach(p=>fxCtx.lineTo(p.x,p.y));
-      fxCtx.strokeStyle=col; fxCtx.lineWidth=0.8; fxCtx.stroke();
+      fxCtx.strokeStyle=arc.isCyber?`rgba(0,212,255,${al*0.3})`:`rgba(200,134,10,${al*0.3})`;
+      fxCtx.lineWidth=4; fxCtx.stroke();
+      /* core pass */
+      fxCtx.beginPath();
+      fxCtx.moveTo(arc.pts[0].x,arc.pts[0].y);
+      arc.pts.slice(1).forEach(p=>fxCtx.lineTo(p.x,p.y));
+      fxCtx.strokeStyle=col; fxCtx.lineWidth=1.5; fxCtx.stroke();
     }
   }
 
@@ -412,17 +379,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   function spawnLogoParticle(lean,now){
     const cx = W/2, cy = H/2;
     const angle = Math.random()*Math.PI*2;
-    const px = cx + Math.cos(angle)*LOGO_R;
-    const py = cy + Math.sin(angle)*LOGO_R;
+    /* spawn at 1.1x logo radius so they appear just outside the logo edge */
+    const spawnR = LOGO_R * 1.1;
+    const px = cx + Math.cos(angle)*spawnR;
+    const py = cy + Math.sin(angle)*spawnR;
     const onCyber = (px/W + py/H) < 1;
     logoParticles.push({
       x:px, y:py,
-      vx:Math.cos(angle)*(0.15+Math.random()*0.35),
-      vy:Math.sin(angle)*(0.15+Math.random()*0.35),
-      a:0.25+Math.random()*0.2,
-      r:0.8+Math.random()*1.4,
+      vx:Math.cos(angle)*(0.4+Math.random()*0.8),
+      vy:Math.sin(angle)*(0.4+Math.random()*0.8),
+      a:1.0,                                  /* full opacity at spawn */
+      r:2.5+Math.random()*3.5,               /* 2.5-6px */
       born:now,
-      life:2000+Math.random()*2000,
+      life:1800+Math.random()*1500,
       col:onCyber?'200,134,10':'0,212,255',
     });
   }
@@ -430,15 +399,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   function drawLogoParticles(lean,now){
     if(now>=nextLogoParticle){
       spawnLogoParticle(lean,now);
-      nextLogoParticle = now + 80 + Math.random()*120;
+      nextLogoParticle = now + 60 + Math.random()*80;  /* spawn more frequently */
     }
     for(let i=logoParticles.length-1;i>=0;i--){
       const p = logoParticles[i];
       const age = (now-p.born)/p.life;
       if(age>=1){logoParticles.splice(i,1);continue;}
-      const al = p.a*Math.pow(1-age,1.5);
+      const al = p.a*Math.pow(1-age, 0.6);  /* slow fade — stays bright most of life */
       p.x+=p.vx; p.y+=p.vy;
       p.vx*=0.995; p.vy*=0.995;
+      /* glow */
+      fxCtx.beginPath(); fxCtx.arc(p.x,p.y,p.r*2.5,0,Math.PI*2);
+      fxCtx.fillStyle=`rgba(${p.col},${al*0.15})`; fxCtx.fill();
+      /* core */
       fxCtx.beginPath(); fxCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
       fxCtx.fillStyle=`rgba(${p.col},${al})`; fxCtx.fill();
     }
