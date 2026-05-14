@@ -491,24 +491,30 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     if(navigating) return;
     navigating = true;
 
-    if(side==='cyber'){
-      const wc = document.getElementById('workshopContent');
-      wc.style.transition='opacity 0.3s';
-      wc.style.opacity='0';
-      wc.style.pointerEvents='none';
-    } else {
-      const wc = document.getElementById('workerContent');
-      wc.style.transition='opacity 0.3s';
-      wc.style.opacity='0';
-      wc.style.pointerEvents='none';
-    }
-
     const targetLean = side==='cyber' ? 5 : -5;
     const startLean  = leanSmooth;
     const startTime  = performance.now();
     const takeover   = 600;
-    const hold       = 300;
+    const hold       = 800;
     const fadeMs     = 400;
+
+    /* fade out opposite content when line sweeps over it (~20% through takeover) */
+    const fadeDelay = takeover * 0.2;
+    if(side==='cyber'){
+      const wc = document.getElementById('workshopContent');
+      setTimeout(()=>{
+        wc.style.transition='opacity 0.25s';
+        wc.style.opacity='0';
+        wc.style.pointerEvents='none';
+      }, fadeDelay);
+    } else {
+      const wc = document.getElementById('workerContent');
+      setTimeout(()=>{
+        wc.style.transition='opacity 0.25s';
+        wc.style.opacity='0';
+        wc.style.pointerEvents='none';
+      }, fadeDelay);
+    }
 
     function animateTakeover(ts){
       const elapsed  = ts-startTime;
