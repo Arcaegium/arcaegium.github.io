@@ -148,7 +148,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 <div id="workerContent">
   <p class="cy-eye">Profile</p>
   <h2 class="cy-title">The Worker</h2>
-  <a class="cy-cta" href="/resume/">Access File</a>
+  <a class="cy-cta" href="/profile/">Access File</a>
 </div>
 
 <div id="workshopContent">
@@ -492,9 +492,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     navigating = true;
 
     if(side==='cyber'){
-      document.getElementById('workshopContent').style.cssText='opacity:0;transition:opacity 0.3s;';
+      const wc = document.getElementById('workshopContent');
+      wc.style.transition='opacity 0.3s';
+      wc.style.opacity='0';
+      wc.style.pointerEvents='none';
     } else {
-      document.getElementById('workerContent').style.cssText='opacity:0;transition:opacity 0.3s;';
+      const wc = document.getElementById('workerContent');
+      wc.style.transition='opacity 0.3s';
+      wc.style.opacity='0';
+      wc.style.pointerEvents='none';
     }
 
     const targetLean = side==='cyber' ? 5 : -5;
@@ -527,7 +533,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     requestAnimationFrame(animateTakeover);
   }
 
-  document.querySelector('.cy-cta').addEventListener('click',e=>{e.preventDefault();nav('/resume/','cyber');});
+  document.querySelector('.cy-cta').addEventListener('click',e=>{e.preventDefault();nav('/profile/','cyber');});
   document.querySelector('.st-cta').addEventListener('click',e=>{e.preventDefault();nav('/workshop/','steam');});
 
 })();
