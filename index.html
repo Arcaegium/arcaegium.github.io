@@ -3,1011 +3,547 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ARCAEGIUM // WORKER PROFILE</title>
-<link rel="icon" type="image/png" href="../assets/logos/Logo_Element_brass.png">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=VT323&display=swap" rel="stylesheet">
+<title>ARCAEGIUM — Ae · 121 · 360</title>
+<link rel="icon" type="image/png" href="assets/logos/Logo_Element_brass.png">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=VT323&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 
-:root{
-  --bg:       #010d12;
-  --surface:  #021820;
-  --border:   rgba(0,212,255,0.25);
-  --accent:   #00d4ff;
-  --accent2:  #00ff9d;
-  --dim:      rgba(0,212,255,0.08);
-  --text:     #a0e8f0;
-  --text-dim: rgba(160,232,240,0.4);
-  --glow:     0 0 8px rgba(0,212,255,0.4);
-  --glow-lg:  0 0 24px rgba(0,212,255,0.3);
-  --amber:    #c8860a;
+:root {
+  --cyber: #00d4ff;
+  --steam: #c8860a;
+  --cyber-glow: rgba(0,212,255,0.35);
+  --steam-glow: rgba(200,134,10,0.35);
 }
 
-html,body{
-  width:100%;height:100%;
+html, body {
+  width:100%; height:100%;
   overflow:hidden;
-  background:var(--bg);
-  font-family:'Share Tech Mono',monospace;
-  color:var(--text);
+  background:#000;
   cursor:crosshair;
 }
 
-/* ── SCANLINE OVERLAY ── */
-body::after{
-  content:'';
-  position:fixed;inset:0;
-  background:repeating-linear-gradient(
-    0deg,
-    transparent 0px,
-    transparent 2px,
-    rgba(0,0,0,0.08) 2px,
-    rgba(0,0,0,0.08) 4px
-  );
-  pointer-events:none;
-  z-index:100;
+/* ── CANVAS STACK ──────────────────────────────
+   z1  cvsBg      — background images (canvas-clipped)
+   z2  cvsOverlay — scanline sweep
+   z3  cvsDivider — dividing line
+   z4  UI         — text content, terminal lines
+   z5  cvsFx      — arc electricity + logo particles
+   z6  logoWrap   — compass rose logo
+   z7  footer     — copyright bar
+   z10 flash      — black fade to black
+───────────────────────────────────────────── */
+#cvsBg, #cvsOverlay, #cvsDivider, #cvsFx {
+  position: fixed; inset: 0; pointer-events: none;
+}
+#cvsBg      { z-index: 1; }
+#cvsOverlay { z-index: 2; }
+#cvsDivider { z-index: 3; }
+#cvsFx      { z-index: 5; }
+
+/* ── TERMINAL LINES — ambient cyber text ── */
+#termLines {
+  position: fixed; top: 0; left: 0;
+  width: 50vw; height: 50vh;
+  z-index: 4;
+  pointer-events: none; overflow: hidden;
+  padding: 0.8rem 1.2rem;
+  opacity: 0.055;
+  display: flex; flex-direction: column;
+  justify-content: flex-end; gap: 1px;
+}
+.tline {
+  font-family: 'VT323', monospace;
+  font-size: 0.68rem; color: var(--cyber);
+  letter-spacing: 0.07em; white-space: nowrap;
 }
 
-/* ── TERMINAL FRAME ── */
-#terminal{
-  position:fixed;inset:0;
-  display:grid;
-  grid-template-rows:auto 1fr auto;
-  gap:0;
-  padding:8px;
+/* ── WORKER CONTENT — upper left ── */
+#workerContent {
+  position: fixed; top: 9vh; left: 5vw;
+  z-index: 4; max-width: 38vw;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.4s;
+}
+/* ── WORKSHOP CONTENT — lower right ── */
+#workshopContent {
+  position: fixed; bottom: 9vh; right: 5vw;
+  z-index: 4; max-width: 38vw; text-align: right;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.7s;
 }
 
-/* ── TOP BAR ── */
-#topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:4px 12px;
-  border:1px solid var(--border);
-  border-bottom:none;
-  background:var(--surface);
-  font-size:0.6rem;
-  letter-spacing:0.3em;
-  color:var(--text-dim);
-  position:relative;
+/* shared label — small amber on worker, small cyan on workshop */
+.cy-eye {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(0.5rem, 0.85vw, 0.62rem);
+  letter-spacing: 0.45em; text-transform: uppercase;
+  color: var(--steam); opacity: 0.9;
+  margin-bottom: 0.5rem;
 }
-#topbar::before{
-  content:'';
-  position:absolute;
-  bottom:0;left:0;right:0;
-  height:1px;
-  background:linear-gradient(90deg,transparent,var(--accent),transparent);
-}
-.topbar-left{display:flex;gap:2rem;align-items:center;}
-.topbar-center{
-  font-size:0.55rem;
-  letter-spacing:0.5em;
-  color:var(--accent);
-  opacity:0.7;
-}
-.topbar-right{display:flex;gap:2rem;align-items:center;}
-.sys-status{
-  display:flex;align-items:center;gap:0.4rem;
-}
-.status-dot{
-  width:5px;height:5px;border-radius:50%;
-  background:var(--accent2);
-  box-shadow:0 0 6px var(--accent2);
-  animation:pulse 2s ease-in-out infinite;
-}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
-
-/* ── MAIN GRID ── */
-#main{
-  border:1px solid var(--border);
-  border-top:none;border-bottom:none;
-  display:grid;
-  grid-template-columns: 2fr 3fr 2fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  gap:1px;
-  background:var(--border);
-  overflow:hidden;
-  position:relative;
+.st-eye {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(0.5rem, 0.85vw, 0.62rem);
+  letter-spacing: 0.45em; text-transform: uppercase;
+  color: var(--cyber); opacity: 0.9;
+  margin-bottom: 0.5rem;
 }
 
-/* background grid texture */
-#main::before{
-  content:'';
-  position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
-  background-size:40px 40px;
-  pointer-events:none;
-  z-index:0;
+/* shared title — Orbitron, white, side-specific glow */
+.cy-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.5rem, 3.2vw, 2.6rem);
+  font-weight: 900; letter-spacing: 0.06em;
+  color: #fff; line-height: 1.05;
+  text-shadow: 0 0 18px var(--cyber-glow);
+}
+.st-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.5rem, 3.2vw, 2.6rem);
+  font-weight: 900; letter-spacing: 0.06em;
+  color: #fff; line-height: 1.05;
+  text-shadow: 0 0 18px var(--steam-glow);
 }
 
-/* ── WIDGET BASE ── */
-.widget{
-  background:var(--surface);
-  position:relative;
-  overflow:hidden;
-  cursor:pointer;
-  transition:background 0.2s;
-  z-index:1;
-  display:flex;
-  flex-direction:column;
+/* shared CTA buttons */
+.cy-cta, .st-cta {
+  display: inline-block; margin-top: 1rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.32em; text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  opacity: 0.8; cursor: pointer; text-decoration: none;
+  transition: opacity 0.3s, box-shadow 0.3s;
 }
-.widget:hover{
-  background:rgba(0,30,45,1);
+.cy-cta {
+  color: var(--steam); border: 1px solid var(--steam);
 }
-.widget:hover .widget-border{
-  border-color:rgba(0,212,255,0.5);
-  box-shadow:inset 0 0 20px rgba(0,212,255,0.05);
+.cy-cta::after { content: ' ▶'; }
+.cy-cta:hover  { opacity: 1; box-shadow: 0 0 14px var(--steam-glow); }
+
+.st-cta {
+  color: var(--cyber); border: 1px solid var(--cyber);
+}
+.st-cta::before { content: '◀ '; }
+.st-cta:hover   { opacity: 1; box-shadow: 0 0 14px var(--cyber-glow); }
+
+/* ── LOGO ── */
+#logoWrap {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  width: clamp(160px, 22vw, 300px);
+  height: clamp(160px, 22vw, 300px);
+  pointer-events: none;
+}
+#logoWrap img {
+  width: 100%; height: 100%; object-fit: contain;
+  filter:
+    drop-shadow(0 0 12px rgba(0,212,255,0.5))
+    drop-shadow(0 0 28px rgba(200,134,10,0.4));
 }
 
-/* inner border with corner accents */
-.widget-border{
-  position:absolute;inset:4px;
-  border:1px solid var(--border);
-  pointer-events:none;
-  transition:border-color 0.3s,box-shadow 0.3s;
-}
-.widget-border::before,.widget-border::after{
-  content:'';position:absolute;
-  width:8px;height:8px;
-  border-color:var(--accent);
-  border-style:solid;
-}
-.widget-border::before{top:-1px;left:-1px;border-width:1px 0 0 1px;}
-.widget-border::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0;}
-
-/* ── WIDGET HEADER ── */
-.widget-header{
-  padding:6px 12px 4px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid rgba(0,212,255,0.1);
-  flex-shrink:0;
-}
-.widget-label{
-  font-size:0.5rem;
-  letter-spacing:0.4em;
-  color:var(--accent);
-  opacity:0.7;
-  text-transform:uppercase;
-}
-.widget-id{
-  font-size:0.45rem;
-  letter-spacing:0.2em;
-  color:var(--text-dim);
-}
-.widget-status{
-  font-size:0.45rem;
-  letter-spacing:0.2em;
-  color:var(--accent2);
-  opacity:0.6;
+/* ── FOOTER ── */
+#footer {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  z-index: 7;
+  display: flex; justify-content: center; align-items: center;
+  padding: 0.5rem 1.5rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
 }
 
-/* ── WIDGET BODY — collapsed state ── */
-.widget-body{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:8px 12px;
-  position:relative;
-  overflow:hidden;
+/* ── FLASH OVERLAY ── */
+#flash {
+  position: fixed; inset: 0; z-index: 10;
+  background: #000; opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s;
 }
+#flash.on { opacity: 1; pointer-events: all; }
 
-/* ── HEARTBEAT CANVAS ── */
-.widget-hb{
-  position:absolute;
-  bottom:0;left:0;right:0;
-  height:28px;
-  opacity:0.5;
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
-/* ── WIDGET TITLE ── */
-.widget-title{
-  font-family:'Orbitron',sans-serif;
-  font-size:clamp(0.55rem,1vw,0.75rem);
-  font-weight:700;
-  letter-spacing:0.12em;
-  color:#fff;
-  text-align:center;
-  margin-bottom:4px;
-  text-shadow:var(--glow);
-}
-.widget-subtitle{
-  font-size:0.42rem;
-  letter-spacing:0.25em;
-  color:var(--text-dim);
-  text-align:center;
-  margin-bottom:6px;
-}
-
-/* ── SLEEP INDICATOR ── */
-.sleep-indicator{
-  display:flex;gap:3px;align-items:center;
-  margin-top:4px;
-}
-.sleep-dot{
-  width:3px;height:3px;border-radius:50%;
-  background:var(--accent);
-  opacity:0.3;
-}
-.sleep-dot.active{
-  opacity:1;
-  box-shadow:0 0 4px var(--accent);
-  animation:sleep-pulse 1.5s ease-in-out infinite;
-}
-@keyframes sleep-pulse{
-  0%,100%{opacity:1;}
-  50%{opacity:0.2;}
-}
-
-/* ── WIDGET GRID LAYOUT ── */
-#main{
-  grid-template-columns: 1.4fr 1.6fr 1.6fr 1.4fr;
-  grid-template-rows: 1.3fr 1.2fr 0.9fr;
-}
-#w-subject   { grid-column: 1;         grid-row: 1; }
-#w-identify  { grid-column: 2 / span 2; grid-row: 1; }
-#w-caps      { grid-column: 4;         grid-row: 1 / span 2; }
-#w-mission   { grid-column: 1;         grid-row: 2; }
-#w-prior     { grid-column: 2 / span 2; grid-row: 2; }
-#w-career    { grid-column: 1;         grid-row: 3; }
-#w-field     { grid-column: 2;         grid-row: 3; }
-#w-protocols { grid-column: 3;         grid-row: 3; }
-#w-signal    { grid-column: 4;         grid-row: 3; }
-
-/* ── BOTTOM BAR ── */
-#bottombar{
-  border:1px solid var(--border);
-  border-top:none;
-  background:var(--surface);
-  display:flex;
-  align-items:center;
-  gap:1rem;
-  padding:0 12px;
-  height:36px;
-  position:relative;
-  overflow:hidden;
-}
-#bottombar::before{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;
-  height:1px;
-  background:linear-gradient(90deg,transparent,var(--accent),transparent);
-}
-#stream-label{
-  font-size:0.48rem;
-  letter-spacing:0.3em;
-  color:var(--accent);
-  opacity:0.6;
-  white-space:nowrap;
-  flex-shrink:0;
-}
-#stream-canvas{
-  flex:1;
-  height:24px;
-  opacity:0.6;
-}
-#stream-right{
-  font-size:0.45rem;
-  letter-spacing:0.2em;
-  color:var(--text-dim);
-  white-space:nowrap;
-  flex-shrink:0;
-}
-
-/* ── ACTIVE WIDGET OVERLAY ── */
-#overlay{
-  position:fixed;inset:0;
-  z-index:200;
-  pointer-events:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-#overlay.active{
-  pointer-events:all;
-}
-
-/* dim background when widget is open */
-#overlay-bg{
-  position:absolute;inset:0;
-  background:rgba(1,13,18,0.85);
-  opacity:0;
-  transition:opacity 0.4s;
-}
-#overlay.active #overlay-bg{
-  opacity:1;
-}
-
-/* the expanded widget card */
-#active-card{
-  position:relative;
-  z-index:1;
-  width:min(85vw,1000px);
-  max-height:80vh;
-  background:var(--surface);
-  border:1px solid var(--accent);
-  box-shadow:
-    0 0 0 1px rgba(0,212,255,0.1),
-    0 0 40px rgba(0,212,255,0.15),
-    0 0 80px rgba(0,212,255,0.08);
-  transform:perspective(1000px) translateZ(-40px) scale(0.92);
-  opacity:0;
-  transition:transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-#overlay.active #active-card{
-  transform:perspective(1000px) translateZ(0) scale(1);
-  opacity:1;
-}
-
-/* corner accents on active card */
-#active-card::before,#active-card::after{
-  content:'';position:absolute;
-  width:16px;height:16px;
-  border-color:var(--accent);
-  border-style:solid;
-  z-index:2;
-}
-#active-card::before{top:0;left:0;border-width:2px 0 0 2px;}
-#active-card::after{bottom:0;right:0;border-width:0 2px 2px 0;}
-
-/* active card header */
-#active-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:10px 16px;
-  border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
-#active-title{
-  font-family:'Orbitron',sans-serif;
-  font-size:0.75rem;
-  font-weight:700;
-  letter-spacing:0.2em;
-  color:var(--accent);
-  text-shadow:var(--glow);
-}
-#active-meta{
-  font-size:0.45rem;
-  letter-spacing:0.3em;
-  color:var(--text-dim);
-}
-#close-btn{
-  font-size:0.55rem;
-  letter-spacing:0.2em;
-  color:var(--text-dim);
-  cursor:pointer;
-  padding:4px 8px;
-  border:1px solid var(--border);
-  transition:color 0.2s,border-color 0.2s;
-}
-#close-btn:hover{
-  color:var(--accent);
-  border-color:var(--accent);
-}
-
-/* active card content area */
-#active-content{
-  flex:1;
-  overflow-y:auto;
-  padding:20px;
-  min-height:200px;
-}
-#active-content::-webkit-scrollbar{width:3px;}
-#active-content::-webkit-scrollbar-track{background:transparent;}
-#active-content::-webkit-scrollbar-thumb{background:var(--border);}
-
-/* boot sequence inside active card */
-.boot-line{
-  font-size:0.58rem;
-  letter-spacing:0.15em;
-  color:var(--text-dim);
-  line-height:1.8;
-  opacity:0;
-  animation:boot-in 0.1s ease forwards;
-}
-.boot-line.accent{color:var(--accent);}
-.boot-line.green{color:var(--accent2);}
-@keyframes boot-in{to{opacity:1;}}
-
-/* placeholder content */
-.placeholder-msg{
-  font-size:0.6rem;
-  letter-spacing:0.2em;
-  color:var(--text-dim);
-  text-align:center;
-  padding:40px;
-  border:1px dashed rgba(0,212,255,0.15);
-  margin:20px;
-}
-
-/* ── AMBIENT: hex scroll ── */
-#hex-scroll{
-  position:fixed;
-  right:0;top:0;bottom:0;
-  width:32px;
-  overflow:hidden;
-  opacity:0.04;
-  pointer-events:none;
-  z-index:1;
-  font-size:0.45rem;
-  letter-spacing:0.1em;
-  color:var(--accent);
-  line-height:1.4;
-  word-break:break-all;
-}
-
-/* comm widget special */
-#w-comm .sleep-indicator{display:none;}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
 <body>
 
-<div id="hex-scroll"></div>
+<!-- Canvas layers — all rendering, no clip-path divs -->
+<canvas id="cvsBg"></canvas>
+<canvas id="cvsOverlay"></canvas>
+<canvas id="cvsDivider"></canvas>
 
-<div id="terminal">
+<!-- UI text layers -->
+<div id="termLines"></div>
 
-  <!-- ── TOP BAR ── -->
-  <div id="topbar">
-    <div class="topbar-left">
-      <span>ARCAEGIUM.SYS // WORKER.PROFILE</span>
-      <span id="tb-session">SESSION: 00:00:00</span>
-    </div>
-    <div class="topbar-center">◈ &nbsp; DOSSIER ACCESS GRANTED &nbsp; ◈</div>
-    <div class="topbar-right">
-      <div class="sys-status">
-        <div class="status-dot"></div>
-        <span id="tb-status">ALL SYSTEMS NOMINAL</span>
-      </div>
-      <span id="tb-clock">--:--:-- UTC</span>
-    </div>
-  </div>
-
-  <!-- ── MAIN WIDGET GRID ── -->
-  <div id="main">
-
-    <!-- 01 SUBJECT FILE -->
-    <div class="widget" id="w-subject" data-id="SUBJ-001" data-label="SUBJECT FILE">
-      <div class="widget-border"></div>
-      <div class="widget-header">
-        <span class="widget-label">Subject File</span>
-        <span class="widget-id">SUBJ-001</span>
-        <span class="widget-status">DORMANT</span>
-      </div>
-      <div class="widget-body">
-        <div class="widget-title">BIOMETRIC<br>RECORD</div>
-        <div class="widget-subtitle">VISUAL IDENTITY // AWAITING DATA</div>
-        <div class="sleep-indicator">
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot"></div>
-          <div class="sleep-dot"></div>
-        </div>
-        <canvas class="widget-hb" data-type="ekg"></canvas>
-      </div>
-    </div>
-
-    <!-- 02 IDENTIFICATION -->
-    <div class="widget" id="w-identify" data-id="IDENT-002" data-label="IDENTIFICATION">
-      <div class="widget-border"></div>
-      <div class="widget-header">
-        <span class="widget-label">Identification</span>
-        <span class="widget-id">IDENT-002</span>
-        <span class="widget-status">DORMANT</span>
-      </div>
-      <div class="widget-body">
-        <div class="widget-title">OPERATOR<br>DESIGNATION</div>
-        <div class="widget-subtitle">NAME // TITLE // CLEARANCE</div>
-        <div class="sleep-indicator">
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot"></div>
-        </div>
-        <canvas class="widget-hb" data-type="matrix"></canvas>
-      </div>
-    </div>
-
-    <!-- 03 CAREER UPLINK -->
-    <div class="widget" id="w-career" data-id="UPLINK-003" data-label="CAREER UPLINK">
-      <div class="widget-border"></div>
-      <div class="widget-header">
-        <span class="widget-label">Career Uplink</span>
-        <span class="widget-id">UPLINK-003</span>
-        <span class="widget-status">LIVE</span>
-      </div>
-      <div class="widget-body">
-        <div class="widget-title">COMTEL //<br>TECHTRUST</div>
-        <div class="widget-subtitle">18 YEARS // ACTIVE CONNECTION</div>
-        <div id="career-ticker" style="font-size:0.7rem;color:var(--accent2);letter-spacing:0.1em;margin:4px 0;">$0.00M</div>
-        <div class="sleep-indicator">
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot active"></div>
-        </div>
-        <canvas class="widget-hb" data-type="revenue"></canvas>
-      </div>
-    </div>
-
-    <!-- 04 PRIOR RECORD -->
-    <div class="widget" id="w-prior" data-id="PRIOR-004" data-label="PRIOR RECORD">
-      <div class="widget-border"></div>
-      <div class="widget-header">
-        <span class="widget-label">Prior Record</span>
-        <span class="widget-id">PRIOR-004</span>
-        <span class="widget-status">DORMANT</span>
-      </div>
-      <div class="widget-body">
-        <div class="widget-title">CAREER<br>HISTORY</div>
-        <div class="widget-subtitle">PRE-COMTEL // ARCHIVED</div>
-        <div class="sleep-indicator">
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot"></div>
-          <div class="sleep-dot"></div>
-        </div>
-        <canvas class="widget-hb" data-type="scroll"></canvas>
-      </div>
-    </div>
-
-    <!-- 05 MISSION DIRECTIVE -->
-    <div class="widget" id="w-mission" data-id="MSSN-005" data-label="MISSION DIRECTIVE">
-      <div class="widget-border"></div>
-      <div class="widget-header">
-        <span class="widget-label">Mission Directive</span>
-        <span class="widget-id">MSSN-005</span>
-        <span class="widget-status">CLASSIFIED</span>
-      </div>
-      <div class="widget-body">
-        <div class="widget-title">OPERATIONAL<br>MANDATE</div>
-        <div class="widget-subtitle" id="mission-scramble">▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓▓▓▓</div>
-        <div class="sleep-indicator">
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot"></div>
-        </div>
-        <canvas class="widget-hb" data-type="encrypt"></canvas>
-      </div>
-    </div>
-
-    <!-- 06 CAPABILITIES INDEX -->
-    <div class="widget" id="w-caps" data-id="CAPS-006" data-label="CAPABILITIES INDEX">
-      <div class="widget-border"></div>
-      <div class="widget-header">
-        <span class="widget-label">Capabilities Index</span>
-        <span class="widget-id">CAPS-006</span>
-        <span class="widget-status">SCANNING</span>
-      </div>
-      <div class="widget-body">
-        <div class="widget-title">SKILL<br>MATRIX</div>
-        <div class="widget-subtitle">SYSTEMS // TOOLS // DOMAINS</div>
-        <div id="caps-pct" style="font-size:0.65rem;color:var(--accent);letter-spacing:0.15em;">--.--%</div>
-        <div class="sleep-indicator">
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot active"></div>
-        </div>
-        <canvas class="widget-hb" data-type="bars"></canvas>
-      </div>
-    </div>
-
-    <!-- 07 FIELD REPORTS -->
-    <div class="widget" id="w-field" data-id="FIELD-007" data-label="FIELD REPORTS">
-      <div class="widget-border"></div>
-      <div class="widget-header">
-        <span class="widget-label">Field Reports</span>
-        <span class="widget-id">FIELD-007</span>
-        <span class="widget-status">LOADING</span>
-      </div>
-      <div class="widget-body">
-        <div class="widget-title">OPERATOR<br>ASSESSMENTS</div>
-        <div class="widget-subtitle">PEER VERIFICATION // PENDING</div>
-        <div style="font-size:0.42rem;color:var(--amber);letter-spacing:0.2em;margin-top:4px;">SIGNAL ACQUISITION IN PROGRESS</div>
-        <div class="sleep-indicator">
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot"></div>
-          <div class="sleep-dot"></div>
-        </div>
-        <canvas class="widget-hb" data-type="signal"></canvas>
-      </div>
-    </div>
-
-    <!-- 08 ACTIVE PROTOCOLS -->
-    <div class="widget" id="w-protocols" data-id="PROTO-008" data-label="ACTIVE PROTOCOLS">
-      <div class="widget-border"></div>
-      <div class="widget-header">
-        <span class="widget-label">Active Protocols</span>
-        <span class="widget-id">PROTO-008</span>
-        <span class="widget-status">RUNNING</span>
-      </div>
-      <div class="widget-body">
-        <div class="widget-title">CURRENT<br>OBJECTIVES</div>
-        <div class="widget-subtitle">CERTS // SKILLS // TARGETS</div>
-        <canvas class="widget-hb" data-type="progress"></canvas>
-      </div>
-    </div>
-
-    <!-- 09 SIGNAL ORIGIN -->
-    <div class="widget" id="w-signal" data-id="SIG-009" data-label="SIGNAL ORIGIN">
-      <div class="widget-border"></div>
-      <div class="widget-header">
-        <span class="widget-label">Signal Origin</span>
-        <span class="widget-id">SIG-009</span>
-        <span class="widget-status">LOCKED</span>
-      </div>
-      <div class="widget-body">
-        <div class="widget-title">LOCATION<br>DATA</div>
-        <div class="widget-subtitle">45.6387° N // 122.6615° W</div>
-        <div class="sleep-indicator">
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot active"></div>
-          <div class="sleep-dot"></div>
-        </div>
-        <canvas class="widget-hb" data-type="radar"></canvas>
-      </div>
-    </div>
-
-    <!-- 10 COMM CHANNEL -->
-    <div class="widget" id="w-comm" data-id="COMM-010" data-label="COMM CHANNEL">
-      <!-- comm spans were conflicting, placed in signal row via JS -->
-    </div>
-
-  </div><!-- /#main -->
-
-  <!-- ── BOTTOM BAR / DATA STREAM ── -->
-  <div id="bottombar">
-    <span id="stream-label">▶ DATA.STREAM // UPLINK-ACTIVE</span>
-    <canvas id="stream-canvas"></canvas>
-    <span id="stream-right" id="sys-metrics">CPU: --% &nbsp;|&nbsp; MEM: --% &nbsp;|&nbsp; NET: -- KB/s &nbsp;|&nbsp; <span id="bb-time">--:--:-- UTC</span></span>
-  </div>
-
-</div><!-- /#terminal -->
-
-<!-- ── ACTIVE WIDGET OVERLAY ── -->
-<div id="overlay">
-  <div id="overlay-bg"></div>
-  <div id="active-card">
-    <div id="active-header">
-      <div>
-        <div id="active-title">—</div>
-        <div id="active-meta">—</div>
-      </div>
-      <div id="close-btn" onclick="closeWidget()">[ CLOSE // ESC ]</div>
-    </div>
-    <div id="active-content"></div>
-  </div>
+<div id="workerContent">
+  <p class="cy-eye">Profile</p>
+  <h2 class="cy-title">The Worker</h2>
+  <a class="cy-cta" href="/profile/">Access File</a>
 </div>
 
+<div id="workshopContent">
+  <h2 class="st-title">The Workshop</h2>
+  <p class="st-eye">Portfolio</p>
+  <a class="st-cta" href="/workshop/">Enter Shop</a>
+</div>
+
+<!-- Logo sits above fx canvas -->
+<div id="logoWrap">
+  <img src="assets/logos/Logo_Circle.png" alt="Arcaegium">
+</div>
+
+<div id="footer">
+  <span>ARCAEGIUM.COM &nbsp;&#11825;&nbsp; © 2026 ARCAEGIUM &nbsp;&#11825;&nbsp; ALL RIGHTS RESERVED</span>
+</div>
+
+<!-- fx canvas and flash are last in DOM — guaranteed above everything -->
+<canvas id="cvsFx"></canvas>
+<div id="flash"></div>
+
 <script>
-(function(){
+(function () {
 
-  /* ══════════════════════════════════════════
-     AMBIENT SYSTEMS
-  ══════════════════════════════════════════ */
+  /* ── CANVAS CONTEXTS ── */
+  const bgCtx  = document.getElementById('cvsBg').getContext('2d');
+  const ovCtx  = document.getElementById('cvsOverlay').getContext('2d');
+  const dCtx   = document.getElementById('cvsDivider').getContext('2d');
+  const fxCtx  = document.getElementById('cvsFx').getContext('2d');
+  const cvsBg      = document.getElementById('cvsBg');
+  const cvsOverlay = document.getElementById('cvsOverlay');
+  const cvsDivider = document.getElementById('cvsDivider');
+  const cvsFx      = document.getElementById('cvsFx');
+  const flash      = document.getElementById('flash');
 
-  /* ── SESSION TIMER ── */
-  const sessionStart = Date.now();
-  function updateTopbar(){
-    const now = new Date();
-    const h = String(now.getUTCHours()).padStart(2,'0');
-    const m = String(now.getUTCMinutes()).padStart(2,'0');
-    const s = String(now.getUTCSeconds()).padStart(2,'0');
-    document.getElementById('tb-clock').textContent = `${h}:${m}:${s} UTC`;
-    document.getElementById('bb-time').textContent  = `${h}:${m}:${s} UTC`;
+  let W, H;
+  let leanTarget = 0;   /* -1 = full cyber, +1 = full steam (positive = steam winning) */
+  let leanSmooth = 0;
+  let navigating = false;
 
-    const elapsed = Math.floor((Date.now()-sessionStart)/1000);
-    const sh = String(Math.floor(elapsed/3600)).padStart(2,'0');
-    const sm = String(Math.floor((elapsed%3600)/60)).padStart(2,'0');
-    const ss = String(elapsed%60).padStart(2,'0');
-    document.getElementById('tb-session').textContent = `SESSION: ${sh}:${sm}:${ss}`;
+  /* ── BACKGROUND IMAGES ── */
+  const imgCyber = new Image(), imgSteam = new Image();
+  let cyberLoaded = false, steamLoaded = false;
+  imgCyber.onload = () => { cyberLoaded = true; };
+  imgSteam.onload = () => { steamLoaded = true; };
+  imgCyber.src = 'assets/backgrounds/Worker_Background.png';
+  imgSteam.src = 'assets/backgrounds/Workshop_Background.png';
+
+  /* ── RESIZE ── */
+  function resize() {
+    W = window.innerWidth; H = window.innerHeight;
+    [cvsBg, cvsOverlay, cvsDivider, cvsFx].forEach(c => { c.width = W; c.height = H; });
+    LOGO_R = Math.min(W, H) * 0.09;
   }
-  setInterval(updateTopbar,1000);
-  updateTopbar();
+  window.addEventListener('resize', resize);
 
-  /* ── FAKE SYSTEM METRICS ── */
-  let cpu=42, mem=61, net=128;
-  function updateMetrics(){
-    cpu = Math.max(20,Math.min(95, cpu+(Math.random()-0.48)*3));
-    mem = Math.max(40,Math.min(85, mem+(Math.random()-0.5)*1.5));
-    net = Math.max(64,Math.min(512, net+(Math.random()-0.5)*20));
-    document.getElementById('stream-right').innerHTML =
-      `CPU: ${cpu.toFixed(1)}% &nbsp;|&nbsp; MEM: ${mem.toFixed(1)}% &nbsp;|&nbsp; NET: ${net.toFixed(0)} KB/s &nbsp;|&nbsp; <span id="bb-time">--:--:--</span>`;
+  /* ── LINE GEOMETRY ──────────────────────────────────
+     Diagonal runs top-right (W,0) → bottom-left (0,H).
+     Line equation: x/W + y/H = 1
+       upper-left (cyber) = value < 1
+       lower-right (steam) = value > 1
+     lean > 0 = steam winning (line shifts toward upper-left)
+     lean < 0 = cyber winning (line shifts toward lower-right)
+     Offset perpendicular to the diagonal.
+  ──────────────────────────────────────────────────── */
+  function getLine(lean) {
+    const mag = lean * 0.25 * Math.min(W, H);
+    const len = Math.sqrt(W * W + H * H);
+    return {
+      ax: W + (H / len) * mag,
+      ay: 0 + (W / len) * mag,
+      bx: 0 + (H / len) * mag,
+      by: H + (W / len) * mag,
+    };
   }
-  setInterval(updateMetrics,800);
 
-  /* ── CAREER TICKER ── */
-  let tickerVal = 0;
-  const tickerTarget = 6.5;
-  const tickerEl = document.getElementById('career-ticker');
-  function updateTicker(){
-    if(tickerVal < tickerTarget){
-      tickerVal = Math.min(tickerTarget, tickerVal + 0.023);
-      tickerEl.textContent = `$${tickerVal.toFixed(2)}M`;
+  /* ── BACKGROUND DRAW — canvas clip, no CSS clip-path ── */
+  function coverFit(ctx, img) {
+    const s  = Math.max(W / img.width, H / img.height);
+    const iw = img.width * s, ih = img.height * s;
+    ctx.drawImage(img, (W - iw) / 2, (H - ih) / 2, iw, ih);
+  }
+
+  function drawBg(lean) {
+    bgCtx.clearRect(0, 0, W, H);
+    const { ax, ay, bx, by } = getLine(lean);
+
+    /* cyber — upper-left */
+    bgCtx.save();
+    bgCtx.beginPath();
+    bgCtx.moveTo(0, 0); bgCtx.lineTo(W, 0);
+    bgCtx.lineTo(ax, ay); bgCtx.lineTo(bx, by);
+    bgCtx.lineTo(0, H); bgCtx.closePath();
+    bgCtx.clip();
+    cyberLoaded ? coverFit(bgCtx, imgCyber) : (bgCtx.fillStyle = '#020a10', bgCtx.fillRect(0, 0, W, H));
+    bgCtx.restore();
+
+    /* steam — lower-right */
+    bgCtx.save();
+    bgCtx.beginPath();
+    bgCtx.moveTo(ax, ay); bgCtx.lineTo(W, 0);
+    bgCtx.lineTo(W, H); bgCtx.lineTo(0, H);
+    bgCtx.lineTo(bx, by); bgCtx.closePath();
+    bgCtx.clip();
+    steamLoaded ? coverFit(bgCtx, imgSteam) : (bgCtx.fillStyle = '#0d0805', bgCtx.fillRect(0, 0, W, H));
+    bgCtx.restore();
+  }
+
+  /* ── SCANLINE OVERLAY — cyber side only ── */
+  function drawOverlay(lean, t) {
+    ovCtx.clearRect(0, 0, W, H);
+    const { ax, ay, bx, by } = getLine(lean);
+
+    ovCtx.save();
+    ovCtx.beginPath();
+    ovCtx.moveTo(0, 0); ovCtx.lineTo(W, 0);
+    ovCtx.lineTo(ax, ay); ovCtx.lineTo(bx, by);
+    ovCtx.lineTo(0, H); ovCtx.closePath();
+    ovCtx.clip();
+
+    const sy = (t * 55) % H;
+    const sg = ovCtx.createLinearGradient(0, sy - 1, 0, sy + 1);
+    sg.addColorStop(0, 'transparent');
+    sg.addColorStop(0.5, 'rgba(0,212,255,0.05)');
+    sg.addColorStop(1, 'transparent');
+    ovCtx.fillStyle = sg;
+    ovCtx.fillRect(0, sy - 1, W, 2);
+    ovCtx.restore();
+  }
+
+  /* ── DIVIDER LINE ── */
+  function drawDivider(lean) {
+    dCtx.clearRect(0, 0, W, H);
+    const { ax, ay, bx, by } = getLine(lean);
+
+    const g = dCtx.createLinearGradient(ax, ay, bx, by);
+    g.addColorStop(0,   'rgba(0,212,255,0.0)');
+    g.addColorStop(0.2, 'rgba(0,212,255,0.6)');
+    g.addColorStop(0.5, 'rgba(255,255,255,0.9)');
+    g.addColorStop(0.8, 'rgba(200,134,10,0.6)');
+    g.addColorStop(1,   'rgba(200,134,10,0.0)');
+
+    /* outer glow */
+    dCtx.beginPath(); dCtx.moveTo(ax, ay); dCtx.lineTo(bx, by);
+    dCtx.strokeStyle = 'rgba(180,180,180,0.05)'; dCtx.lineWidth = 18; dCtx.stroke();
+    /* mid glow */
+    dCtx.beginPath(); dCtx.moveTo(ax, ay); dCtx.lineTo(bx, by);
+    dCtx.strokeStyle = 'rgba(180,180,180,0.10)'; dCtx.lineWidth = 5;  dCtx.stroke();
+    /* core */
+    dCtx.beginPath(); dCtx.moveTo(ax, ay); dCtx.lineTo(bx, by);
+    dCtx.strokeStyle = g; dCtx.lineWidth = 1.5; dCtx.stroke();
+  }
+
+  /* ── ARC ELECTRICITY ── */
+  const arcs = [];
+  let nextArcTime = 0;
+
+  function spawnArc(ax, ay, bx, by, now) {
+    const t   = 0.15 + Math.random() * 0.7;
+    const ox  = ax + (bx - ax) * t;
+    const oy  = ay + (by - ay) * t;
+    const len = Math.sqrt((bx - ax) ** 2 + (by - ay) ** 2);
+    const px  = -(by - ay) / len;
+    const py  =  (bx - ax) / len;
+    const reach = 20 + Math.random() * 40;
+    const steps = 6 + Math.floor(Math.random() * 5);
+    const pts = [{ x: ox, y: oy }];
+    for (let i = 1; i <= steps; i++) {
+      const f = i / steps;
+      pts.push({
+        x: ox + px * reach * Math.sin(f * Math.PI) + (Math.random() - 0.5) * 12,
+        y: oy + py * reach * Math.sin(f * Math.PI) + (Math.random() - 0.5) * 12,
+      });
+    }
+    pts.push({ x: ox, y: oy });
+    arcs.push({ pts, born: now, life: 150 + Math.random() * 250, isCyber: Math.random() < 0.5 });
+  }
+
+  function drawArcs(now) {
+    for (let i = arcs.length - 1; i >= 0; i--) {
+      const arc = arcs[i];
+      const age = (now - arc.born) / arc.life;
+      if (age >= 1) { arcs.splice(i, 1); continue; }
+      const al  = Math.sin(age * Math.PI);
+      const rgb = arc.isCyber ? '0,212,255' : '200,134,10';
+      /* glow pass */
+      fxCtx.beginPath();
+      fxCtx.moveTo(arc.pts[0].x, arc.pts[0].y);
+      arc.pts.slice(1).forEach(p => fxCtx.lineTo(p.x, p.y));
+      fxCtx.strokeStyle = `rgba(${rgb},${al * 0.3})`; fxCtx.lineWidth = 4; fxCtx.stroke();
+      /* core pass */
+      fxCtx.beginPath();
+      fxCtx.moveTo(arc.pts[0].x, arc.pts[0].y);
+      arc.pts.slice(1).forEach(p => fxCtx.lineTo(p.x, p.y));
+      fxCtx.strokeStyle = `rgba(${rgb},${al})`; fxCtx.lineWidth = 1.5; fxCtx.stroke();
     }
   }
-  setInterval(updateTicker, 80);
 
-  /* ── CAPS PERCENTAGE CYCLING ── */
-  let capsVal = 0, capsDir = 1;
-  const capsEl = document.getElementById('caps-pct');
-  function updateCaps(){
-    capsVal += capsDir * (0.3 + Math.random()*0.4);
-    if(capsVal>=97.8){ capsDir=-1; } if(capsVal<=82){ capsDir=1; }
-    capsEl.textContent = `${capsVal.toFixed(1)}%`;
+  /* ── LOGO PARTICLES ── */
+  const logoParticles = [];
+  let nextLogoParticle = 0;
+  let LOGO_R = 80;
+
+  function spawnLogoParticle(now) {
+    const cx = W / 2, cy = H / 2;
+    const angle  = Math.random() * Math.PI * 2;
+    const spawnR = LOGO_R * 1.4;
+    const px = cx + Math.cos(angle) * spawnR;
+    const py = cy + Math.sin(angle) * spawnR;
+    const onCyber = (px / W + py / H) < 1;
+    const speed = 0.06 + Math.random() * 0.12;
+    logoParticles.push({
+      x: px, y: py,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      wobbleAmp:   (Math.random() - 0.5) * 0.03,
+      wobbleFreq:  0.4 + Math.random() * 1.2,
+      wobblePhase: Math.random() * Math.PI * 2,
+      r:    1.2 + Math.random() * 1.8,
+      born: now,
+      life: 4000 + Math.random() * 3000,
+      col:  onCyber ? '200,134,10' : '0,212,255',
+    });
   }
-  setInterval(updateCaps,120);
 
-  /* ── MISSION SCRAMBLE ── */
-  const SCRAMBLE_CHARS = '▓░█▒▐▌■□▪▫';
-  const missionEl = document.getElementById('mission-scramble');
-  function updateScramble(){
-    let s='';
-    for(let i=0;i<18;i++){
-      if(Math.random()<0.05) s+=' ';
-      else s+=SCRAMBLE_CHARS[Math.floor(Math.random()*SCRAMBLE_CHARS.length)];
+  function drawLogoParticles(now) {
+    if (now >= nextLogoParticle) {
+      spawnLogoParticle(now);
+      nextLogoParticle = now + 60 + Math.random() * 80;
     }
-    missionEl.textContent=s;
+    for (let i = logoParticles.length - 1; i >= 0; i--) {
+      const p   = logoParticles[i];
+      const age = (now - p.born) / p.life;
+      if (age >= 1) { logoParticles.splice(i, 1); continue; }
+      const al  = Math.pow(1 - age, 0.5);
+      const dir = Math.atan2(p.vy, p.vx);
+      const w   = Math.sin(now / 1000 * p.wobbleFreq + p.wobblePhase) * p.wobbleAmp;
+      p.vx += -Math.sin(dir) * w;
+      p.vy +=  Math.cos(dir) * w;
+      p.vx *= 0.999; p.vy *= 0.999;
+      p.x += p.vx; p.y += p.vy;
+      fxCtx.beginPath(); fxCtx.arc(p.x, p.y, p.r * 2.5, 0, Math.PI * 2);
+      fxCtx.fillStyle = `rgba(${p.col},${al * 0.15})`; fxCtx.fill();
+      fxCtx.beginPath(); fxCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      fxCtx.fillStyle = `rgba(${p.col},${al})`; fxCtx.fill();
+    }
   }
-  setInterval(updateScramble,150);
 
-  /* ── HEX SCROLL ── */
-  const hexEl = document.getElementById('hex-scroll');
-  function genHex(len){ let s=''; for(let i=0;i<len;i++) s+=Math.floor(Math.random()*16).toString(16).toUpperCase(); return s; }
-  function updateHex(){
-    hexEl.textContent = genHex(400);
+  function drawFx(lean, now) {
+    fxCtx.clearRect(0, 0, W, H);
+    const { ax, ay, bx, by } = getLine(lean);
+    if (now >= nextArcTime) {
+      spawnArc(ax, ay, bx, by, now);
+      nextArcTime = now + 300 + Math.random() * 700;
+    }
+    drawArcs(now);
+    drawLogoParticles(now);
   }
-  setInterval(updateHex,200);
-  updateHex();
 
-  /* ══════════════════════════════════════════
-     HEARTBEAT CANVASES
-  ══════════════════════════════════════════ */
-  const hbCanvases = document.querySelectorAll('.widget-hb');
-  const hbStates = new Map();
-
-  hbCanvases.forEach(c=>{
-    const type = c.dataset.type;
-    const rect = ()=>c.getBoundingClientRect();
-    c.width = c.offsetWidth||200;
-    c.height = 28;
-    hbStates.set(c,{type, phase:Math.random()*Math.PI*2, t:0});
+  /* ── TERMINAL LINES ── */
+  const TERMINAL_LINES = [
+    '> INITIALIZING ARCAEGIUM PROTOCOL...',
+    '> AUTH: SESSION ACTIVE — TOKEN VALID',
+    '> PORTFOLIO_LOAD: 18YRS_EXPERIENCE.dat',
+    '> VENDOR.ecosystem: 100+ NODES MAPPED',
+    '> REVENUE.stream: $6.5M — ACTIVE',
+    '> RETENTION.index: 97.0% — NOMINAL',
+    '> C-SUITE INTERFACE: READY',
+    '> SALESFORCE.arch: OPTIMIZED',
+    '> SOLUTION.engine: ONLINE',
+    '> TAM_PROTOCOL: ENGAGED',
+    '> DISCOVERY.module: STANDBY',
+    '> ARCAEGIUM.os: v1.21.360',
+  ];
+  const termDiv = document.getElementById('termLines');
+  TERMINAL_LINES.forEach(txt => {
+    const d = document.createElement('div');
+    d.className = 'tline'; d.textContent = txt;
+    termDiv.appendChild(d);
   });
 
-  function drawHB(c, state, now){
-    const w=c.width, h=c.height;
-    const ctx=c.getContext('2d');
-    ctx.clearRect(0,0,w,h);
-    state.t = now/1000;
-    const t = state.t + state.phase;
+  /* ── MOUSE ── */
+  document.addEventListener('mousemove', e => {
+    if (navigating) return;
+    const val = e.clientX / W + e.clientY / H;
+    leanTarget = Math.max(-0.55, Math.min(0.55, (1 - val) * 1.5));
+  });
+  document.addEventListener('mouseleave', () => { if (!navigating) leanTarget = 0; });
 
-    if(state.type==='ekg'){
-      ctx.strokeStyle='rgba(0,212,255,0.7)';
-      ctx.lineWidth=1;
-      ctx.beginPath();
-      for(let x=0;x<w;x++){
-        const nx = (x/w + t*0.3)%1;
-        let y = h/2;
-        const spike = Math.abs(((nx*8)%1)-0.5);
-        if(spike<0.05){ y=h*0.1; } else if(spike<0.1){ y=h*0.85; } else if(spike<0.15){ y=h*0.2; }
-        else{ y = h/2 + Math.sin(nx*Math.PI*2)*3; }
-        x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-      }
-      ctx.stroke();
+  /* ── MAIN LOOP ── */
+  let last = 0;
+  resize();
 
-    } else if(state.type==='revenue'){
-      ctx.strokeStyle='rgba(0,255,157,0.6)';
-      ctx.lineWidth=1;
-      ctx.beginPath();
-      for(let x=0;x<w;x++){
-        const nx=x/w;
-        const y=h-(h*0.15)-(h*0.7)*(nx*0.8+Math.sin(nx*12+t)*0.1);
-        x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-      }
-      ctx.stroke();
-
-    } else if(state.type==='bars'){
-      const bars=8;
-      for(let i=0;i<bars;i++){
-        const bh=(Math.sin(t*1.5+i*0.8)*0.3+0.5+Math.random()*0.1)*h*0.85;
-        ctx.fillStyle=`rgba(0,212,255,${0.4+i/bars*0.4})`;
-        ctx.fillRect(i*(w/bars)+1,h-bh,(w/bars)-2,bh);
-      }
-
-    } else if(state.type==='radar'){
-      const cx=w/2,cy=h/2,r=Math.min(w,h)*0.38;
-      ctx.strokeStyle='rgba(0,212,255,0.3)';
-      ctx.lineWidth=0.5;
-      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(cx,cy,r*0.6,0,Math.PI*2); ctx.stroke();
-      const sweep=(t*1.5)%(Math.PI*2);
-      const grd=ctx.createConicalGradient?null:null;
-      ctx.strokeStyle=`rgba(0,212,255,0.8)`;
-      ctx.lineWidth=1;
-      ctx.beginPath();
-      ctx.moveTo(cx,cy);
-      ctx.lineTo(cx+Math.cos(sweep)*r,cy+Math.sin(sweep)*r);
-      ctx.stroke();
-
-    } else if(state.type==='signal'){
-      const bars=12;
-      for(let i=0;i<bars;i++){
-        const active=Math.random()<0.6;
-        ctx.fillStyle=active?`rgba(200,134,10,${0.3+Math.random()*0.5})`:'rgba(200,134,10,0.1)';
-        ctx.fillRect(i*(w/bars)+1,h*0.2,(w/bars)-2,h*0.6);
-      }
-
-    } else if(state.type==='progress'){
-      ctx.fillStyle='rgba(0,212,255,0.15)';
-      ctx.fillRect(0,h*0.3,w,h*0.4);
-      const pct=(Math.sin(t*0.5)*0.3+0.6);
-      ctx.fillStyle='rgba(0,212,255,0.7)';
-      ctx.fillRect(0,h*0.3,w*pct,h*0.4);
-
-    } else if(state.type==='scroll'){
-      ctx.fillStyle='rgba(0,212,255,0.5)';
-      ctx.font=`${h*0.35}px Share Tech Mono`;
-      const offset=(t*20)%w;
-      ctx.fillText('> LOADING PRIOR RECORD... ACCESSING ARCHIVE...',w-offset,h*0.7);
-
-    } else if(state.type==='encrypt'){
-      ctx.fillStyle='rgba(0,212,255,0.4)';
-      ctx.font=`${h*0.38}px Share Tech Mono`;
-      let s='';
-      for(let i=0;i<Math.floor(w/8);i++) s+=SCRAMBLE_CHARS[Math.floor(Math.random()*SCRAMBLE_CHARS.length)];
-      ctx.fillText(s,4,h*0.72);
-
-    } else if(state.type==='matrix'){
-      ctx.fillStyle='rgba(0,212,255,0.35)';
-      ctx.font=`${h*0.4}px VT323`;
-      const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let s='';
-      for(let i=0;i<Math.floor(w/7);i++) s+=chars[Math.floor(Math.random()*chars.length)];
-      ctx.fillText(s,4,h*0.75);
+  function loop(ts) {
+    const dt = Math.min(ts - last, 50);
+    last = ts;
+    if (!navigating) {
+      leanSmooth += (leanTarget - leanSmooth) * (1 - Math.exp(-dt / 1000));
     }
-  }
-
-  /* ── STREAM CANVAS ── */
-  const streamCvs = document.getElementById('stream-canvas');
-  let streamW=0, streamPhase=0;
-  function resizeStream(){
-    streamW=streamCvs.offsetWidth;
-    streamCvs.width=streamW;
-    streamCvs.height=24;
-  }
-  window.addEventListener('resize',resizeStream);
-  resizeStream();
-
-  function drawStream(now){
-    const ctx=streamCvs.getContext('2d');
-    const w=streamCvs.width,h=24;
-    ctx.clearRect(0,0,w,h);
-    streamPhase=now/1000;
-    ctx.strokeStyle='rgba(0,212,255,0.5)';
-    ctx.lineWidth=1;
-    ctx.beginPath();
-    for(let x=0;x<w;x++){
-      const y=h/2 +
-        Math.sin(x*0.04+streamPhase*2)*4 +
-        Math.sin(x*0.11+streamPhase*1.3)*2.5 +
-        Math.sin(x*0.23+streamPhase*0.7)*1.5;
-      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-    }
-    ctx.stroke();
-    /* fill */
-    ctx.lineTo(w,h); ctx.lineTo(0,h); ctx.closePath();
-    ctx.fillStyle='rgba(0,212,255,0.04)';
-    ctx.fill();
-  }
-
-  /* ── MAIN ANIMATION LOOP ── */
-  function loop(now){
-    hbCanvases.forEach(c=>{
-      const state=hbStates.get(c);
-      if(state){ drawHB(c,state,now); }
-    });
-    drawStream(now);
+    drawBg(leanSmooth);
+    drawOverlay(leanSmooth, ts / 1000);
+    drawDivider(leanSmooth);
+    drawFx(leanSmooth, ts);
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
 
-  /* ══════════════════════════════════════════
-     WIDGET OPEN / CLOSE
-  ══════════════════════════════════════════ */
-  const overlay     = document.getElementById('overlay');
-  const activeCard  = document.getElementById('active-card');
-  const activeTitle = document.getElementById('active-title');
-  const activeMeta  = document.getElementById('active-meta');
-  const activeContent = document.getElementById('active-content');
-  let currentWidget = null;
+  /* ── NAVIGATION ── */
+  function nav(url, side) {
+    if (navigating) return;
+    navigating = true;
 
-  const WIDGET_DATA = {
-    'w-subject':   { title:'SUBJECT FILE',       meta:'BIOMETRIC RECORD // VISUAL IDENTITY' },
-    'w-identify':  { title:'IDENTIFICATION',     meta:'OPERATOR DESIGNATION // CLEARANCE LEVEL' },
-    'w-career':    { title:'CAREER UPLINK',      meta:'COMTEL // TECHTRUST // 18 YEARS ACTIVE' },
-    'w-prior':     { title:'PRIOR RECORD',       meta:'PRE-COMTEL CAREER ARCHIVE' },
-    'w-mission':   { title:'MISSION DIRECTIVE',  meta:'OPERATIONAL MANDATE // CLASSIFIED' },
-    'w-caps':      { title:'CAPABILITIES INDEX', meta:'SKILL MATRIX // SYSTEMS // TOOLS // DOMAINS' },
-    'w-field':     { title:'FIELD REPORTS',      meta:'OPERATOR ASSESSMENTS // PEER VERIFICATION' },
-    'w-protocols': { title:'ACTIVE PROTOCOLS',   meta:'CURRENT OBJECTIVES // CERTS // TARGETS' },
-    'w-signal':    { title:'SIGNAL ORIGIN',      meta:'LOCATION DATA // VANCOUVER, WA' },
-    'w-comm':      { title:'COMM CHANNEL',       meta:'SECURE CONNECTION // STANDING BY' },
-  };
+    const targetLean = side === 'cyber' ? 5 : -5;
+    const startLean  = leanSmooth;
+    const startTime  = performance.now();
+    const TAKEOVER   = 600;   /* ms for line to sweep full screen */
+    const HOLD       = 800;   /* ms to show full background before fade */
+    const FADE       = 400;   /* ms black fade before navigation */
 
-  function bootSequence(lines, delay=60){
-    activeContent.innerHTML='';
-    lines.forEach((line,i)=>{
-      setTimeout(()=>{
-        const d=document.createElement('div');
-        d.className='boot-line'+(line.cls?' '+line.cls:'');
-        d.textContent=line.text;
-        d.style.animationDelay='0s';
-        activeContent.appendChild(d);
-        activeContent.scrollTop=activeContent.scrollHeight;
-      }, i*delay);
-    });
+    /* fade out opposite content as the line sweeps over it */
+    const opposite = side === 'cyber' ? 'workshopContent' : 'workerContent';
+    setTimeout(() => {
+      const el = document.getElementById(opposite);
+      el.style.animation = 'none';
+      el.style.transition = 'opacity 0.25s';
+      el.style.opacity = '0';
+      el.style.pointerEvents = 'none';
+    }, TAKEOVER * 0.2);
+
+    function animateTakeover(ts) {
+      const progress = Math.min((ts - startTime) / TAKEOVER, 1);
+      const eased = progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+      leanSmooth = startLean + (targetLean - startLean) * eased;
+      drawBg(leanSmooth);
+      drawOverlay(leanSmooth, ts / 1000);
+      drawDivider(leanSmooth);
+      drawFx(leanSmooth, ts);
+      if (progress < 1) {
+        requestAnimationFrame(animateTakeover);
+      } else {
+        setTimeout(() => {
+          flash.classList.add('on');
+          setTimeout(() => { window.location.href = url; }, FADE);
+        }, HOLD);
+      }
+    }
+    requestAnimationFrame(animateTakeover);
   }
 
-  function openWidget(id){
-    if(currentWidget===id){ closeWidget(); return; }
-    currentWidget=id;
-    const data=WIDGET_DATA[id]||{title:id,meta:''};
-    activeTitle.textContent=data.title;
-    activeMeta.textContent=data.meta+' // '+new Date().toISOString().slice(0,19).replace('T',' ')+' UTC';
-
-    /* boot sequence placeholder — each widget will get its own content later */
-    bootSequence([
-      {text:'> INITIALIZING '+data.title+'...'},
-      {text:'> AUTHENTICATING REQUEST...'},
-      {text:'> DECRYPTING DATA PACKET...', cls:'accent'},
-      {text:'> ACCESS GRANTED', cls:'green'},
-      {text:''},
-      {text:'[ WIDGET CONTENT LOADING ]', cls:'accent'},
-      {text:''},
-      {text:'This widget is under construction.'},
-      {text:'Content will be populated in a subsequent build pass.'},
-    ]);
-
-    overlay.classList.add('active');
-    /* dim other widgets */
-    document.querySelectorAll('.widget').forEach(w=>{
-      w.style.opacity = w.id===id ? '1' : '0.4';
-    });
-  }
-
-  window.closeWidget = function(){
-    overlay.classList.remove('active');
-    currentWidget=null;
-    document.querySelectorAll('.widget').forEach(w=>w.style.opacity='1');
-  };
-
-  document.querySelectorAll('.widget').forEach(w=>{
-    w.addEventListener('click',()=>openWidget(w.id));
-  });
-
-  document.addEventListener('keydown',e=>{
-    if(e.key==='Escape') closeWidget();
-  });
-
-  document.getElementById('overlay-bg').addEventListener('click', closeWidget);
-
-  /* ── RESIZE HB CANVASES ── */
-  function resizeHB(){
-    hbCanvases.forEach(c=>{
-      c.width=c.offsetWidth||200;
-      c.height=28;
-    });
-  }
-  window.addEventListener('resize',resizeHB);
-  setTimeout(resizeHB,100);
+  document.querySelector('.cy-cta').addEventListener('click', e => { e.preventDefault(); nav('/profile/', 'cyber'); });
+  document.querySelector('.st-cta').addEventListener('click', e => { e.preventDefault(); nav('/workshop/', 'steam'); });
 
 })();
+
+/* ── BFCACHE FIX — force full reload on back-button restore ── */
+window.addEventListener('pageshow', e => { if (e.persisted) window.location.reload(); });
 </script>
 </body>
 </html>
