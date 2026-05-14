@@ -79,8 +79,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 .cy-eye{
   font-family:'Share Tech Mono',monospace;
   font-size:clamp(0.5rem,0.85vw,0.62rem);
-  letter-spacing:0.45em;color:var(--cyber-accent);
-  opacity:0.5;text-transform:uppercase;margin-bottom:0.5rem;
+  letter-spacing:0.45em;color:var(--steam-accent);
+  opacity:0.9;text-transform:uppercase;margin-bottom:0.5rem;
 }
 .cy-title{
   font-family:'Orbitron',sans-serif;
@@ -99,12 +99,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   display:inline-block;margin-top:1rem;
   font-family:'Share Tech Mono',monospace;
   font-size:0.58rem;letter-spacing:0.32em;
-  color:var(--cyber-accent);text-transform:uppercase;
-  padding:0.35rem 0.8rem;border:1px solid var(--cyber-accent);
-  opacity:0.65;cursor:pointer;text-decoration:none;
+  color:var(--steam-accent);text-transform:uppercase;
+  padding:0.35rem 0.8rem;border:1px solid var(--steam-accent);
+  opacity:0.8;cursor:pointer;text-decoration:none;
   transition:opacity 0.3s,box-shadow 0.3s;
 }
-.cy-cta:hover{opacity:1;box-shadow:0 0 14px var(--cyber-glow);}
+.cy-cta:hover{opacity:1;box-shadow:0 0 14px var(--steam-glow);}
 .cy-cta::after{content:' ▶';}
 
 /* workshop content - lower right */
@@ -116,8 +116,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 .st-eye{
   font-family:'Share Tech Mono',monospace;
   font-size:clamp(0.5rem,0.85vw,0.62rem);
-  letter-spacing:0.45em;color:var(--steam-accent);
-  opacity:0.5;text-transform:uppercase;margin-bottom:0.5rem;
+  letter-spacing:0.45em;color:var(--cyber-accent);
+  opacity:0.9;text-transform:uppercase;margin-bottom:0.5rem;
 }
 .st-title{
   font-family:'Orbitron',sans-serif;
@@ -133,14 +133,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 }
 .st-cta{
   display:inline-block;margin-top:1rem;
-  font-family:'Libre Baskerville',serif;
-  font-size:0.58rem;letter-spacing:0.22em;
-  color:var(--steam-accent);text-transform:uppercase;
-  padding:0.35rem 0.8rem;border:1px solid var(--steam-accent);
-  opacity:0.65;cursor:pointer;text-decoration:none;
-  font-style:italic;transition:opacity 0.3s,box-shadow 0.3s;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.58rem;letter-spacing:0.32em;
+  color:var(--cyber-accent);text-transform:uppercase;
+  padding:0.35rem 0.8rem;border:1px solid var(--cyber-accent);
+  opacity:0.8;cursor:pointer;text-decoration:none;
+  transition:opacity 0.3s,box-shadow 0.3s;
 }
-.st-cta:hover{opacity:1;box-shadow:0 0 14px var(--steam-glow);}
+.st-cta:hover{opacity:1;box-shadow:0 0 14px var(--cyber-glow);}
 .st-cta::before{content:'◀ ';}
 
 /* terminal ambient */
@@ -410,13 +410,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 
   function loop(ts){
     const t=ts/1000;
-    const dt=Math.min(ts-last, 50); /* cap dt to avoid huge jumps after tab switch */
+    const dt=Math.min(ts-last, 50);
     last=ts;
-    /* frame-rate independent smoothing: decay constant ~8 per second */
-    const alpha = 1 - Math.exp(-3 * dt / 1000);
-    leanSmooth += (leanTarget - leanSmooth) * alpha;
-    updateClip(leanSmooth);
-    drawDivider(leanSmooth);
+    if(!navigating){
+      const alpha = 1 - Math.exp(-3 * dt / 1000);
+      leanSmooth += (leanTarget - leanSmooth) * alpha;
+      updateClip(leanSmooth);
+      drawDivider(leanSmooth);
+    }
     drawCyber(t);
     drawSteam();
     requestAnimationFrame(loop);
@@ -424,13 +425,26 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   requestAnimationFrame(loop);
 
   /* ── NAVIGATION with background takeover ── */
+  let navigating = false;
+
   function nav(url, side){
-    leanTarget = leanSmooth;
+    if(navigating) return;
+    navigating = true;
+
+    /* hide the other side's content immediately */
+    if(side === 'cyber'){
+      document.getElementById('workshopContent').style.opacity = '0';
+      document.getElementById('workshopContent').style.transition = 'opacity 0.3s';
+    } else {
+      document.getElementById('workerContent').style.opacity = '0';
+      document.getElementById('workerContent').style.transition = 'opacity 0.3s';
+    }
+
     const targetLean = side === 'cyber' ? 5 : -5;
     const startLean  = leanSmooth;
     const startTime  = performance.now();
     const takeover   = 600;
-    const hold       = 200;
+    const hold       = 300;
     const fadeMs     = 400;
 
     function animateTakeover(ts){
@@ -442,9 +456,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
       leanSmooth = startLean + (targetLean - startLean) * eased;
       updateClip(leanSmooth);
       drawDivider(leanSmooth);
-      if (progress < 1){
+      if(progress < 1){
         requestAnimationFrame(animateTakeover);
       } else {
+        /* lock lean at full takeover — main loop won't override since navigating=true */
         setTimeout(()=>{
           flash.style.background = '#000';
           flash.classList.add('on');
@@ -455,7 +470,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     requestAnimationFrame(animateTakeover);
   }
 
-  document.addEventListener('mouseleave', () => { leanTarget = 0; });
+  document.addEventListener('mouseleave', () => { if(!navigating) leanTarget = 0; });
   document.querySelector('.cy-cta').addEventListener('click',e=>{e.preventDefault();nav('/resume/','cyber');});
   document.querySelector('.st-cta').addEventListener('click',e=>{e.preventDefault();nav('/workshop/','steam');});
 
