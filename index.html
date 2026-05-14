@@ -5,76 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ARCAEGIUM — Ae · 121 · 360</title>
 <link rel="icon" type="image/png" href="assets/logos/Logo_Element_brass.png">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=VT323&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --cyber-bg:#020a10;
   --cyber-accent:#00d4ff;
   --cyber-glow:rgba(0,212,255,0.35);
-  --cyber-text:#a0e8f0;
-  --steam-bg:#0d0805;
   --steam-accent:#c8860a;
   --steam-glow:rgba(200,134,10,0.35);
-  --steam-text:#d4aa70;
 }
 html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshair;}
 
-/* panes */
-/* ── FULL BACKGROUND LAYERS ── */
-#bgCyber {
-  position:fixed;inset:0;z-index:3;
-  background:url('assets/backgrounds/Worker_Background.png') center center / cover no-repeat;
+/* ── CANVAS STACK ── no clip-path anywhere, no stacking context fights ── */
+/* z1: background    z2: overlay effects    z3: divider line
+   z4: UI text/logo  z5: fx particles/arcs  z6: flash          */
+#cvsBg      {position:fixed;inset:0;z-index:1;pointer-events:none;}
+#cvsOverlay {position:fixed;inset:0;z-index:2;pointer-events:none;}
+#cvsDivider {position:fixed;inset:0;z-index:3;pointer-events:none;}
+#cvsFx      {position:fixed;inset:0;z-index:5;pointer-events:none;}
+
+/* ── TERMINAL AMBIENT ── sits above bg canvases ── */
+#termLines{
+  position:fixed;top:0;left:0;
+  width:50vw;height:50vh;z-index:4;
+  pointer-events:none;overflow:hidden;
+  padding:0.8rem 1.2rem;opacity:0.055;
+  display:flex;flex-direction:column;
+  justify-content:flex-end;gap:1px;
 }
-#bgSteam {
-  position:fixed;inset:0;z-index:4;
-  background:url('assets/backgrounds/Workshop_Background.png') center center / cover no-repeat;
-  clip-path:polygon(100% 0,100% 100%,0 100%);
+.tline{
+  font-family:'VT323',monospace;
+  font-size:0.68rem;color:#00d4ff;
+  letter-spacing:0.07em;white-space:nowrap;
 }
 
-#paneCyber{
-  position:fixed;inset:0;z-index:5;
-  background:transparent;
-  clip-path:polygon(0 0,100% 0,0 100%);
-}
-#paneCyber::before{
-  content:'';position:absolute;inset:0;
-  background-image:repeating-linear-gradient(0deg,rgba(0,212,255,0.025) 0px,transparent 1px,transparent 3px);
-  pointer-events:none;
-}
-#paneSteam{
-  position:fixed;inset:0;z-index:5;
-  background:transparent;
-  clip-path:polygon(100% 0,100% 100%,0 100%);
-  pointer-events:none;
-}
-
-/* canvases */
-#cvsCyber,#cvsSteam,#cvsDivider{position:fixed;inset:0;pointer-events:none;}
-#cvsCyber{z-index:6;}
-#cvsSteam{z-index:6;}
-#cvsDivider{z-index:9;}
-
-/* logo */
-#logoWrap{
-  position:fixed;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  z-index:11;
-  width:clamp(160px,22vw,300px);
-  height:clamp(160px,22vw,300px);
-  pointer-events:none;
-}
-#logoWrap img{
-  width:100%;height:100%;object-fit:contain;
-  filter:drop-shadow(0 0 12px rgba(0,212,255,0.5)) drop-shadow(0 0 28px rgba(200,134,10,0.4));
-}
-#logoSvgFallback{width:100%;height:100%;display:none;}
-@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-
-/* worker content - upper left */
+/* ── UI LAYER ── z-index 4, same as terminal ── */
 #workerContent{
   position:fixed;top:9vh;left:5vw;
-  z-index:12;max-width:38vw;
+  z-index:4;max-width:38vw;
   opacity:0;animation:fadeUp 1s ease forwards 0.4s;
 }
 .cy-eye{
@@ -90,12 +58,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   color:#fff;line-height:1.05;
   text-shadow:0 0 18px var(--cyber-glow);
 }
-.cy-desc{
-  font-family:'Share Tech Mono',monospace;
-  font-size:clamp(0.52rem,0.88vw,0.65rem);
-  letter-spacing:0.14em;color:var(--cyber-text);
-  opacity:0.5;line-height:1.9;margin-top:0.7rem;
-}
 .cy-cta{
   display:inline-block;margin-top:1rem;
   font-family:'Share Tech Mono',monospace;
@@ -108,10 +70,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 .cy-cta:hover{opacity:1;box-shadow:0 0 14px var(--steam-glow);}
 .cy-cta::after{content:' ▶';}
 
-/* workshop content - lower right */
 #workshopContent{
   position:fixed;bottom:9vh;right:5vw;
-  z-index:12;max-width:38vw;text-align:right;
+  z-index:4;max-width:38vw;text-align:right;
   opacity:0;animation:fadeUp 1s ease forwards 0.7s;
 }
 .st-eye{
@@ -126,12 +87,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   font-weight:900;letter-spacing:0.06em;color:#fff;line-height:1.05;
   text-shadow:0 0 18px var(--steam-glow);
 }
-.st-desc{
-  font-family:'Libre Baskerville',serif;
-  font-size:clamp(0.52rem,0.88vw,0.65rem);
-  letter-spacing:0.05em;color:var(--steam-text);
-  opacity:0.5;line-height:1.9;font-style:italic;margin-top:0.7rem;
-}
 .st-cta{
   display:inline-block;margin-top:1rem;
   font-family:'Share Tech Mono',monospace;
@@ -144,33 +99,24 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 .st-cta:hover{opacity:1;box-shadow:0 0 14px var(--cyber-glow);}
 .st-cta::before{content:'◀ ';}
 
-/* terminal ambient */
-#termLines{
-  position:fixed;top:0;left:0;
-  width:50vw;height:50vh;z-index:6;
-  pointer-events:none;overflow:hidden;
-  padding:0.8rem 1.2rem;opacity:0.055;
-  display:flex;flex-direction:column;
-  justify-content:flex-end;gap:1px;
+/* ── LOGO ── z-index above fx canvas ── */
+#logoWrap{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:6;
+  width:clamp(160px,22vw,300px);
+  height:clamp(160px,22vw,300px);
+  pointer-events:none;
 }
-.tline{
-  font-family:'VT323',monospace;
-  font-size:0.68rem;color:#00d4ff;
-  letter-spacing:0.07em;white-space:nowrap;
+#logoWrap img{
+  width:100%;height:100%;object-fit:contain;
+  filter:drop-shadow(0 0 12px rgba(0,212,255,0.5)) drop-shadow(0 0 28px rgba(200,134,10,0.4));
 }
 
-/* element badge */
-#badge{
-  position:fixed;bottom:1.5rem;left:1.5rem;
-  z-index:12;width:clamp(38px,4.5vw,58px);
-  opacity:0.18;transition:opacity 0.4s;
-}
-#badge:hover{opacity:0.55;}
-
-/* footer */
+/* ── FOOTER ── */
 #footer{
   position:fixed;bottom:0;left:0;right:0;
-  z-index:12;
+  z-index:7;
   display:flex;justify-content:center;align-items:center;
   padding:0.5rem 1.5rem;
   font-family:'Share Tech Mono',monospace;
@@ -183,33 +129,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 }
 .foot-center{color:rgba(255,255,255,0.4);}
 
-/* element corner mark */
-#elementMark{
-  position:fixed;
-  top:1.2rem;left:1.2rem;
-  z-index:9;
-  width:clamp(40px,5vw,65px);
-  height:clamp(40px,5vw,65px);
-  opacity:0.7;
-  pointer-events:none;
-}
-#elementMark img{width:100%;height:100%;object-fit:contain;}
-
-/* flash */
-#flash{position:fixed;inset:0;z-index:20;background:#000;opacity:0;pointer-events:none;transition:opacity 0.35s;}
-#flash.on{opacity:1;}
+/* ── FLASH ── always on top ── */
+#flash{position:fixed;inset:0;z-index:10;background:#000;opacity:0;pointer-events:none;transition:opacity 0.35s;}
+#flash.on{opacity:1;pointer-events:all;}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
 <body>
 
-<div id="bgCyber"></div>
-<div id="bgSteam"></div>
-<div id="paneCyber"></div>
-<div id="paneSteam"></div>
-<canvas id="cvsCyber"></canvas>
-<canvas id="cvsSteam"></canvas>
+<!-- ALL rendering happens on canvases — no clip-path divs -->
+<canvas id="cvsBg"></canvas>
+<canvas id="cvsOverlay"></canvas>
 <canvas id="cvsDivider"></canvas>
 
 <div id="termLines"></div>
@@ -230,141 +161,233 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
   <img src="assets/logos/Logo_Circle.png" alt="Arcaegium">
 </div>
 
-<!-- badge hidden until transparent PNG available
-<div id="badge">
-  <img src="Logo_Element.png" alt="Ae 121 360"
-       onerror="this.style.display='none'">
-</div>
--->
-
 <div id="footer">
   <span class="foot-center">ARCAEGIUM.COM &nbsp;&#11825;&nbsp; © 2026 ARCAEGIUM &nbsp;&#11825;&nbsp; ALL RIGHTS RESERVED</span>
 </div>
 
+<!-- fx canvas and flash are last — guaranteed on top -->
+<canvas id="cvsFx"></canvas>
 <div id="flash"></div>
 
 <script>
 (function(){
-  /* ── ELEMENTS ── */
-  const paneCyber  = document.getElementById('paneCyber');
-  const paneSteam  = document.getElementById('paneSteam');
-  const cvsCyber   = document.getElementById('cvsCyber');
-  const cvsSteam   = document.getElementById('cvsSteam');
+
+  /* ── CANVAS CONTEXTS ── */
+  const cvsBg      = document.getElementById('cvsBg');
+  const cvsOverlay = document.getElementById('cvsOverlay');
   const cvsDivider = document.getElementById('cvsDivider');
-  const cyCtx      = cvsCyber.getContext('2d');
-  const stCtx      = cvsSteam.getContext('2d');
-  const dCtx       = cvsDivider.getContext('2d');
-  const flash      = document.getElementById('flash');
+  const cvsFx      = document.getElementById('cvsFx');
+  const bgCtx  = cvsBg.getContext('2d');
+  const ovCtx  = cvsOverlay.getContext('2d');
+  const dCtx   = cvsDivider.getContext('2d');
+  const fxCtx  = cvsFx.getContext('2d');
+  const flash  = document.getElementById('flash');
 
   let W, H;
-  let leanTarget = 0;   /* -1=full cyber, +1=full steam */
+  let leanTarget = 0;
   let leanSmooth = 0;
+  let navigating = false;
+
+  /* ── BACKGROUND IMAGES ── preload before drawing ── */
+  const imgCyber = new Image();
+  const imgSteam = new Image();
+  let cyberLoaded = false, steamLoaded = false;
+  imgCyber.onload = () => { cyberLoaded = true; };
+  imgSteam.onload = () => { steamLoaded = true; };
+  imgCyber.src = 'assets/backgrounds/Worker_Background.png';
+  imgSteam.src = 'assets/backgrounds/Workshop_Background.png';
 
   /* ── RESIZE ── */
   function resize(){
     W = window.innerWidth; H = window.innerHeight;
-    [cvsCyber,cvsSteam,cvsDivider].forEach(c=>{c.width=W;c.height=H;});
+    [cvsBg,cvsOverlay,cvsDivider,cvsFx].forEach(c=>{c.width=W;c.height=H;});
     initCyberP(); initSteamP();
+    LOGO_R = Math.min(W,H) * 0.09;
   }
-  window.addEventListener('resize',resize);
+  window.addEventListener('resize', resize);
 
-  /* ── MOUSE LEAN ──
+  /* ── LINE GEOMETRY ──
      Diagonal: top-right (W,0) → bottom-left (0,H)
-     Point on that line at midpoint: (W/2, H/2)
-     
-     We determine which side of the line the mouse is on,
-     and how far, to set lean.
-     
-     Line equation: x/W + y/H = 1  (top-right to bottom-left)
-     For a point (mx,my): val = mx/W + my/H
-       val < 1 → upper-left (cyber side)
-       val > 1 → lower-right (steam side)
-       val = 1 → on the line
-     
-     lean = (val - 1) * 2, clamped to -1..+1
-     lean < 0 = cyber winning, lean > 0 = steam winning
-  */
-  document.addEventListener('mousemove', e => {
-    const val = e.clientX/W + e.clientY/H;
-    const raw = (1 - val) * 1.5;
-    leanTarget = Math.max(-0.55, Math.min(0.55, raw));
-  });
-
-  /* ── CLIP PATH ──
-     The diagonal line goes from point A (on top or right edge)
-     to point B (on bottom or left edge).
-     
-     At lean=0: A=(W,0), B=(0,H)  — true corner to corner
-     We offset both points perpendicular to the line.
-     
-     Perpendicular direction to (W,0)→(0,H) is (H,W)/sqrt(H²+W²)
-     Offset magnitude = lean * 0.25 * min(W,H)
+     lean < 0 = cyber (upper-left) winning
+     lean > 0 = steam (lower-right) winning
   */
   function getLine(lean){
     const mag = lean * 0.25 * Math.min(W,H);
     const len = Math.sqrt(W*W + H*H);
     const px  = H/len;
     const py  = W/len;
-    /* allow endpoints to go off-screen so polygons always fully cover */
-    const ax = W + px*mag;
-    const ay = 0 + py*mag;
-    const bx = 0 + px*mag;
-    const by = H + py*mag;
-    return {ax,ay,bx,by};
+    return {
+      ax: W + px*mag,
+      ay: 0 + py*mag,
+      bx: 0 + px*mag,
+      by: H + py*mag,
+    };
   }
 
-  const bgSteam = document.getElementById('bgSteam');
-  const bgCyber = document.getElementById('bgCyber');
-
-  function updateClip(lean){
+  /* ── DRAW BACKGROUNDS — clipped on canvas, no clip-path divs ── */
+  function drawBg(lean){
+    bgCtx.clearRect(0,0,W,H);
     const {ax,ay,bx,by} = getLine(lean);
-    /* Cyber = upper-left side of diagonal:
-       top-left (0,0) → A → B → bottom-left (0,H)
-       Also need top-right if line has moved past it, but covering
-       all four corners of the upper-left half:
-       (0,0) → (ax,ay) → (bx,by) → (0,H) */
-    const cyberPoly = `polygon(0px 0px, ${W}px 0px, ${ax}px ${ay}px, ${bx}px ${by}px, 0px ${H}px)`;
-    /* Steam = lower-right side of diagonal:
-       A → top-right (W,0) → bottom-right (W,H) → B
-       Need to also cover bottom-left corner when steam is winning:
-       (ax,ay) → (W,0) → (W,H) → (0,H) → (bx,by) */
-    const steamPoly = `polygon(${ax}px ${ay}px, ${W}px 0px, ${W}px ${H}px, 0px ${H}px, ${bx}px ${by}px)`;
-    paneCyber.style.clipPath = cyberPoly;
-    bgCyber.style.clipPath   = cyberPoly;
-    paneSteam.style.clipPath = steamPoly;
-    bgSteam.style.clipPath   = steamPoly;
+
+    /* cyber = upper-left polygon */
+    bgCtx.save();
+    bgCtx.beginPath();
+    bgCtx.moveTo(0,0);
+    bgCtx.lineTo(W,0);
+    bgCtx.lineTo(ax,ay);
+    bgCtx.lineTo(bx,by);
+    bgCtx.lineTo(0,H);
+    bgCtx.closePath();
+    bgCtx.clip();
+    if(cyberLoaded){
+      /* draw image cover-fit */
+      const s  = Math.max(W/imgCyber.width, H/imgCyber.height);
+      const iw = imgCyber.width*s, ih = imgCyber.height*s;
+      bgCtx.drawImage(imgCyber,(W-iw)/2,(H-ih)/2,iw,ih);
+    } else {
+      bgCtx.fillStyle='#020a10'; bgCtx.fillRect(0,0,W,H);
+    }
+    bgCtx.restore();
+
+    /* steam = lower-right polygon */
+    bgCtx.save();
+    bgCtx.beginPath();
+    bgCtx.moveTo(ax,ay);
+    bgCtx.lineTo(W,0);
+    bgCtx.lineTo(W,H);
+    bgCtx.lineTo(0,H);
+    bgCtx.lineTo(bx,by);
+    bgCtx.closePath();
+    bgCtx.clip();
+    if(steamLoaded){
+      const s  = Math.max(W/imgSteam.width, H/imgSteam.height);
+      const iw = imgSteam.width*s, ih = imgSteam.height*s;
+      bgCtx.drawImage(imgSteam,(W-iw)/2,(H-ih)/2,iw,ih);
+    } else {
+      bgCtx.fillStyle='#0d0805'; bgCtx.fillRect(0,0,W,H);
+    }
+    bgCtx.restore();
   }
 
-  /* ── DIVIDER ── */
-  /* arc electricity state */
+  /* ── DRAW OVERLAY — scanlines on cyber side ── */
+  function drawOverlay(lean, t){
+    ovCtx.clearRect(0,0,W,H);
+    const {ax,ay,bx,by} = getLine(lean);
+
+    /* clip to cyber polygon for scanlines */
+    ovCtx.save();
+    ovCtx.beginPath();
+    ovCtx.moveTo(0,0); ovCtx.lineTo(W,0);
+    ovCtx.lineTo(ax,ay); ovCtx.lineTo(bx,by);
+    ovCtx.lineTo(0,H); ovCtx.closePath();
+    ovCtx.clip();
+
+    /* horizontal scanline sweep */
+    const sy = (t*55)%H;
+    const sg = ovCtx.createLinearGradient(0,sy-1,0,sy+1);
+    sg.addColorStop(0,'transparent');
+    sg.addColorStop(0.5,'rgba(0,212,255,0.05)');
+    sg.addColorStop(1,'transparent');
+    ovCtx.fillStyle=sg; ovCtx.fillRect(0,sy-1,W,2);
+
+    /* ambient cyber particles */
+    cyP.forEach(p=>{
+      p.y+=p.vy;
+      if(p.y<0){ const r=randomCyberPos(); p.x=r.x; p.y=r.y; }
+      ovCtx.beginPath(); ovCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ovCtx.fillStyle=`rgba(0,212,255,${p.a*0.35})`; ovCtx.fill();
+    });
+    ovCtx.restore();
+
+    /* steam ember particles — clip to steam polygon */
+    ovCtx.save();
+    ovCtx.beginPath();
+    ovCtx.moveTo(ax,ay); ovCtx.lineTo(W,0);
+    ovCtx.lineTo(W,H); ovCtx.lineTo(0,H);
+    ovCtx.lineTo(bx,by); ovCtx.closePath();
+    ovCtx.clip();
+    stP.forEach(p=>{
+      p.y+=p.vy; p.x+=p.vx;
+      if(p.y<0){ const r=randomSteamPos(); p.x=r.x; p.y=r.y; }
+      const col=p.warm?`rgba(200,134,10,${p.a})`:`rgba(180,70,0,${p.a*0.7})`;
+      ovCtx.beginPath(); ovCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ovCtx.fillStyle=col; ovCtx.fill();
+    });
+    ovCtx.restore();
+  }
+
+  /* ── PARTICLE SYSTEMS ── */
+  let cyP=[], stP=[];
+
+  function randomCyberPos(){
+    /* random point guaranteed to be on cyber side (upper-left of diagonal) */
+    let x, y;
+    do { x=Math.random()*W; y=Math.random()*H; } while(x/W+y/H>=1);
+    return {x,y};
+  }
+  function randomSteamPos(){
+    /* random point guaranteed to be on steam side (lower-right of diagonal) */
+    let x, y;
+    do { x=Math.random()*W; y=Math.random()*H; } while(x/W+y/H<=1);
+    return {x,y};
+  }
+
+  function initCyberP(){
+    cyP=[];
+    for(let i=0;i<55;i++){
+      const {x,y} = randomCyberPos();
+      cyP.push({x, y, vy:-(Math.random()*0.25+0.08), a:Math.random()*0.35+0.08, r:Math.random()*1.2+0.3});
+    }
+  }
+  function initSteamP(){
+    stP=[];
+    for(let i=0;i<45;i++){
+      const {x,y} = randomSteamPos();
+      stP.push({x, y, vy:-(Math.random()*0.35+0.08), vx:(Math.random()-0.5)*0.15, a:Math.random()*0.25+0.05, r:Math.random()*1.8+0.4, warm:Math.random()<0.6});
+    }
+  }
+
+  /* ── DIVIDER LINE ── */
+  function drawDivider(lean){
+    dCtx.clearRect(0,0,W,H);
+    const {ax,ay,bx,by} = getLine(lean);
+    const g = dCtx.createLinearGradient(ax,ay,bx,by);
+    g.addColorStop(0,  'rgba(0,212,255,0.0)');
+    g.addColorStop(0.2,'rgba(0,212,255,0.6)');
+    g.addColorStop(0.5,'rgba(255,255,255,0.9)');
+    g.addColorStop(0.8,'rgba(200,134,10,0.6)');
+    g.addColorStop(1,  'rgba(200,134,10,0.0)');
+    dCtx.beginPath(); dCtx.moveTo(ax,ay); dCtx.lineTo(bx,by);
+    dCtx.strokeStyle='rgba(180,180,180,0.05)'; dCtx.lineWidth=18; dCtx.stroke();
+    dCtx.beginPath(); dCtx.moveTo(ax,ay); dCtx.lineTo(bx,by);
+    dCtx.strokeStyle='rgba(180,180,180,0.10)'; dCtx.lineWidth=5; dCtx.stroke();
+    dCtx.beginPath(); dCtx.moveTo(ax,ay); dCtx.lineTo(bx,by);
+    dCtx.strokeStyle=g; dCtx.lineWidth=1.5; dCtx.stroke();
+  }
+
+  /* ── ARC ELECTRICITY ── drawn on fxCtx ── */
   const arcs = [];
   let nextArcTime = 0;
 
   function spawnArc(ax,ay,bx,by,now){
-    /* pick a random point along the line */
     const t  = 0.15 + Math.random()*0.7;
     const ox = ax + (bx-ax)*t;
     const oy = ay + (by-ay)*t;
-    /* perpendicular direction */
     const len = Math.sqrt((bx-ax)**2+(by-ay)**2);
     const px  = -(by-ay)/len;
     const py  =  (bx-ax)/len;
-    /* arc branches out perpendicular then jaggles back */
     const reach = 8 + Math.random()*18;
     const pts   = [{x:ox,y:oy}];
     const steps = 4 + Math.floor(Math.random()*4);
     for(let i=1;i<=steps;i++){
-      const frac  = i/steps;
-      const base  = ox + px*reach*Math.sin(frac*Math.PI);
-      const basey = oy + py*reach*Math.sin(frac*Math.PI);
+      const frac = i/steps;
       pts.push({
-        x: base  + (Math.random()-0.5)*6,
-        y: basey + (Math.random()-0.5)*6,
+        x: ox + px*reach*Math.sin(frac*Math.PI) + (Math.random()-0.5)*6,
+        y: oy + py*reach*Math.sin(frac*Math.PI) + (Math.random()-0.5)*6,
       });
     }
-    pts.push({x:ox+px*0,y:oy+py*0});
-    const isCyber = Math.random()<0.5;
-    arcs.push({pts, born:now, life:120+Math.random()*180, isCyber});
+    pts.push({x:ox,y:oy});
+    arcs.push({pts, born:now, life:120+Math.random()*180, isCyber:Math.random()<0.5});
   }
 
   function drawArcs(now){
@@ -373,151 +396,63 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
       const age = (now-arc.born)/arc.life;
       if(age>=1){arcs.splice(i,1);continue;}
       const al  = Math.sin(age*Math.PI)*0.8;
-      const col = arc.isCyber
-        ? `rgba(0,212,255,${al})`
-        : `rgba(200,134,10,${al})`;
-      dCtx.beginPath();
-      dCtx.moveTo(arc.pts[0].x, arc.pts[0].y);
-      arc.pts.slice(1).forEach(p=>dCtx.lineTo(p.x,p.y));
-      dCtx.strokeStyle=col;
-      dCtx.lineWidth=0.8;
-      dCtx.stroke();
+      const col = arc.isCyber?`rgba(0,212,255,${al})`:`rgba(200,134,10,${al})`;
+      fxCtx.beginPath();
+      fxCtx.moveTo(arc.pts[0].x,arc.pts[0].y);
+      arc.pts.slice(1).forEach(p=>fxCtx.lineTo(p.x,p.y));
+      fxCtx.strokeStyle=col; fxCtx.lineWidth=0.8; fxCtx.stroke();
     }
   }
 
-  function drawDivider(lean,now){
-    dCtx.clearRect(0,0,W,H);
-    const {ax,ay,bx,by} = getLine(lean);
-
-    /* spawn arcs */
-    if(now>=nextArcTime){
-      spawnArc(ax,ay,bx,by,now);
-      nextArcTime = now + 300 + Math.random()*700;
-    }
-    drawArcs(now);
-
-    const g = dCtx.createLinearGradient(ax,ay,bx,by);
-    g.addColorStop(0,  'rgba(0,212,255,0.0)');
-    g.addColorStop(0.2,'rgba(0,212,255,0.6)');
-    g.addColorStop(0.5,'rgba(255,255,255,0.9)');
-    g.addColorStop(0.8,'rgba(200,134,10,0.6)');
-    g.addColorStop(1,  'rgba(200,134,10,0.0)');
-
-    /* glow */
-    dCtx.beginPath(); dCtx.moveTo(ax,ay); dCtx.lineTo(bx,by);
-    dCtx.strokeStyle='rgba(180,180,180,0.05)'; dCtx.lineWidth=18; dCtx.stroke();
-    dCtx.beginPath(); dCtx.moveTo(ax,ay); dCtx.lineTo(bx,by);
-    dCtx.strokeStyle='rgba(180,180,180,0.10)'; dCtx.lineWidth=5; dCtx.stroke();
-    /* core */
-    dCtx.beginPath(); dCtx.moveTo(ax,ay); dCtx.lineTo(bx,by);
-    dCtx.strokeStyle=g; dCtx.lineWidth=1.5; dCtx.stroke();
-
-    /* logo particles */
-    drawLogoParticles(lean, now);
-  }
-
-  /* ── LOGO PARTICLES ── */
+  /* ── LOGO PARTICLES ── drawn on fxCtx ── */
   const logoParticles = [];
   let nextLogoParticle = 0;
-  const LOGO_R = Math.min(window.innerWidth, window.innerHeight) * 0.09; /* approx logo radius */
+  let LOGO_R = 80;
 
-  function spawnLogoParticle(cx,cy,lean,now){
-    const angle  = Math.random()*Math.PI*2;
-    const speed  = 0.15 + Math.random()*0.35;
-    /* determine which side of line this particle is on based on emit angle */
-    /* emit amber on cyber side, teal on steam side */
+  function spawnLogoParticle(lean,now){
+    const cx = W/2, cy = H/2;
+    const angle = Math.random()*Math.PI*2;
     const px = cx + Math.cos(angle)*LOGO_R;
     const py = cy + Math.sin(angle)*LOGO_R;
-    const onCyber = (px/W + py/H) < 1; /* above diagonal = cyber side */
+    const onCyber = (px/W + py/H) < 1;
     logoParticles.push({
-      x:  px, y:  py,
-      vx: Math.cos(angle)*speed,
-      vy: Math.sin(angle)*speed,
-      a:  0.25 + Math.random()*0.2,
-      r:  0.8 + Math.random()*1.4,
-      born: now,
-      life: 2000 + Math.random()*2000,
-      /* reversed colors: amber on cyber bg, teal on steam bg */
-      col: onCyber ? '200,134,10' : '0,212,255',
+      x:px, y:py,
+      vx:Math.cos(angle)*(0.15+Math.random()*0.35),
+      vy:Math.sin(angle)*(0.15+Math.random()*0.35),
+      a:0.25+Math.random()*0.2,
+      r:0.8+Math.random()*1.4,
+      born:now,
+      life:2000+Math.random()*2000,
+      col:onCyber?'200,134,10':'0,212,255',
     });
   }
 
-  function drawLogoParticles(lean, now){
-    const cx = W/2, cy = H/2;
+  function drawLogoParticles(lean,now){
     if(now>=nextLogoParticle){
-      spawnLogoParticle(cx,cy,lean,now);
+      spawnLogoParticle(lean,now);
       nextLogoParticle = now + 80 + Math.random()*120;
     }
     for(let i=logoParticles.length-1;i>=0;i--){
-      const p   = logoParticles[i];
+      const p = logoParticles[i];
       const age = (now-p.born)/p.life;
       if(age>=1){logoParticles.splice(i,1);continue;}
-      /* ease out — slow drift and fade */
-      const al = p.a * Math.pow(1-age,1.5);
-      p.x += p.vx; p.y += p.vy;
-      p.vx *= 0.995; p.vy *= 0.995; /* gentle deceleration */
-      dCtx.beginPath(); dCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      dCtx.fillStyle=`rgba(${p.col},${al})`; dCtx.fill();
+      const al = p.a*Math.pow(1-age,1.5);
+      p.x+=p.vx; p.y+=p.vy;
+      p.vx*=0.995; p.vy*=0.995;
+      fxCtx.beginPath(); fxCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      fxCtx.fillStyle=`rgba(${p.col},${al})`; fxCtx.fill();
     }
   }
 
-  /* ── CYBER PARTICLES ── */
-  let cyP=[];
-  function initCyberP(){
-    cyP=[];
-    for(let i=0;i<55;i++) cyP.push({
-      x:Math.random()*W*0.52,
-      y:Math.random()*H*0.52,
-      vy:-(Math.random()*0.25+0.08),
-      a:Math.random()*0.35+0.08,
-      r:Math.random()*1.2+0.3,
-    });
-  }
-  function drawCyber(t){
-    cyCtx.clearRect(0,0,W,H);
-    /* scan line */
-    const sy=(t*55)%H;
-    const sg=cyCtx.createLinearGradient(0,sy-1,0,sy+1);
-    sg.addColorStop(0,'transparent');
-    sg.addColorStop(0.5,'rgba(0,212,255,0.05)');
-    sg.addColorStop(1,'transparent');
-    cyCtx.fillStyle=sg; cyCtx.fillRect(0,sy-1,W*0.55,2);
-    /* particles */
-    cyP.forEach(p=>{
-      p.y+=p.vy;
-      if(p.y<0){p.y=H*0.55;p.x=Math.random()*W*0.55;}
-      cyCtx.beginPath(); cyCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      cyCtx.fillStyle=`rgba(0,212,255,${p.a*0.35})`; cyCtx.fill();
-    });
-  }
-
-  /* ── STEAM PARTICLES — embers ── */
-  let stP=[];
-  function initSteamP(){
-    stP=[];
-    for(let i=0;i<45;i++) stP.push({
-      x:W*0.48+Math.random()*W*0.52,
-      y:H*0.48+Math.random()*H*0.52,
-      vy:-(Math.random()*0.35+0.08),
-      vx:(Math.random()-0.5)*0.15,
-      a:Math.random()*0.25+0.05,
-      r:Math.random()*1.8+0.4,
-      warm:Math.random()<0.6,
-    });
-  }
-  function drawSteam(){
-    stCtx.clearRect(0,0,W,H);
-    stP.forEach(p=>{
-      p.y+=p.vy; p.x+=p.vx;
-      if(p.y<H*0.38){p.y=H;p.x=W*0.48+Math.random()*W*0.52;}
-      if(p.x<W*0.38){p.x=W*0.5+Math.random()*W*0.5;}
-      if(p.x>W)     {p.x=W*0.5+Math.random()*W*0.45;}
-      const col=p.warm
-        ?`rgba(200,134,10,${p.a})`
-        :`rgba(180,70,0,${p.a*0.7})`;
-      stCtx.beginPath(); stCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      stCtx.fillStyle=col; stCtx.fill();
-    });
+  function drawFx(lean,now){
+    fxCtx.clearRect(0,0,W,H);
+    const {ax,ay,bx,by} = getLine(lean);
+    if(now>=nextArcTime){
+      spawnArc(ax,ay,bx,by,now);
+      nextArcTime = now+300+Math.random()*700;
+    }
+    drawArcs(now);
+    drawLogoParticles(lean,now);
   }
 
   /* ── TERMINAL LINES ── */
@@ -541,43 +476,47 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     d.className='tline'; d.textContent=txt; tDiv.appendChild(d);
   });
 
-  /* ── LOOP ── */
-  let last=0;
+  /* ── MOUSE ── */
+  document.addEventListener('mousemove', e => {
+    if(navigating) return;
+    const val = e.clientX/W + e.clientY/H;
+    const raw = (1 - val) * 1.5;
+    leanTarget = Math.max(-0.55, Math.min(0.55, raw));
+  });
+  document.addEventListener('mouseleave', () => { if(!navigating) leanTarget = 0; });
+
+  /* ── MAIN LOOP ── */
+  let last = 0;
   resize();
 
   function loop(ts){
-    const t=ts/1000;
-    const dt=Math.min(ts-last, 50);
-    last=ts;
+    const t  = ts/1000;
+    const dt = Math.min(ts-last, 50);
+    last = ts;
     if(!navigating){
-      const alpha = 1 - Math.exp(-1 * dt / 1000);
-      leanSmooth += (leanTarget - leanSmooth) * alpha;
-      updateClip(leanSmooth);
-      drawDivider(leanSmooth, ts);
+      const alpha = 1 - Math.exp(-1 * dt/1000);
+      leanSmooth += (leanTarget-leanSmooth)*alpha;
     }
-    drawCyber(t);
-    drawSteam();
+    drawBg(leanSmooth);
+    drawOverlay(leanSmooth, t);
+    drawDivider(leanSmooth);
+    drawFx(leanSmooth, ts);
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
 
-  /* ── NAVIGATION with background takeover ── */
-  let navigating = false;
-
+  /* ── NAVIGATION ── */
   function nav(url, side){
     if(navigating) return;
     navigating = true;
 
-    /* hide the other side's content immediately */
-    if(side === 'cyber'){
-      document.getElementById('workshopContent').style.opacity = '0';
-      document.getElementById('workshopContent').style.transition = 'opacity 0.3s';
+    if(side==='cyber'){
+      document.getElementById('workshopContent').style.cssText='opacity:0;transition:opacity 0.3s;';
     } else {
-      document.getElementById('workerContent').style.opacity = '0';
-      document.getElementById('workerContent').style.transition = 'opacity 0.3s';
+      document.getElementById('workerContent').style.cssText='opacity:0;transition:opacity 0.3s;';
     }
 
-    const targetLean = side === 'cyber' ? 5 : -5;
+    const targetLean = side==='cyber' ? 5 : -5;
     const startLean  = leanSmooth;
     const startTime  = performance.now();
     const takeover   = 600;
@@ -585,29 +524,28 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
     const fadeMs     = 400;
 
     function animateTakeover(ts){
-      const elapsed  = ts - startTime;
-      const progress = Math.min(elapsed / takeover, 1);
-      const eased    = progress < 0.5
-        ? 2 * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-      leanSmooth = startLean + (targetLean - startLean) * eased;
-      updateClip(leanSmooth);
-      drawDivider(leanSmooth, ts);
-      if(progress < 1){
+      const elapsed  = ts-startTime;
+      const progress = Math.min(elapsed/takeover, 1);
+      const eased    = progress<0.5
+        ? 2*progress*progress
+        : 1-Math.pow(-2*progress+2,2)/2;
+      leanSmooth = startLean+(targetLean-startLean)*eased;
+      drawBg(leanSmooth);
+      drawOverlay(leanSmooth, ts/1000);
+      drawDivider(leanSmooth);
+      drawFx(leanSmooth, ts);
+      if(progress<1){
         requestAnimationFrame(animateTakeover);
       } else {
-        /* lock lean at full takeover — main loop won't override since navigating=true */
         setTimeout(()=>{
-          flash.style.background = '#000';
           flash.classList.add('on');
-          setTimeout(()=>{ window.location.href = url; }, fadeMs);
+          setTimeout(()=>{ window.location.href=url; }, fadeMs);
         }, hold);
       }
     }
     requestAnimationFrame(animateTakeover);
   }
 
-  document.addEventListener('mouseleave', () => { if(!navigating) leanTarget = 0; });
   document.querySelector('.cy-cta').addEventListener('click',e=>{e.preventDefault();nav('/resume/','cyber');});
   document.querySelector('.st-cta').addEventListener('click',e=>{e.preventDefault();nav('/workshop/','steam');});
 
@@ -615,7 +553,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:crosshai
 
 /* ── BFCACHE FIX ── */
 window.addEventListener('pageshow', e => {
-  if (e.persisted) window.location.reload();
+  if(e.persisted) window.location.reload();
 });
 </script>
 </body>
