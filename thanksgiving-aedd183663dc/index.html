@@ -9,165 +9,220 @@
 <style>
   :root {
     --paper:#EDEEE9; --raised:#F7F8F4; --sunk:#E3E5DE;
-    --ink:#1A1F1E; --ink-mid:#454E4B; --ink-soft:#6B7370;
-    --rule:#CDD1C9; --rule-soft:#DDE0D8;
-    --accent:#1F5E5B; --accent-bg:#DCE7E4;
-    --brass:#8A6115;
-    --ok:#406E45; --ok-bg:#DDE7DA;
-    --warn:#8A6115; --warn-bg:#EFE4CB;
-    --fail:#8E3A3A; --fail-bg:#EEDCDA;
+    --ink:#151A19; --ink-mid:#3D4644; --ink-soft:#5E6764;
+    --rule:#C6CBC2; --rule-soft:#D8DCD3;
+    --accent:#164E4B; --accent-bg:#D8E6E3;
+    --brass:#7A5512;
+    --ok:#33613A; --ok-bg:#D6E4D3;
+    --warn:#7A5512; --warn-bg:#EFE2C4;
+    --fail:#7E3131; --fail-bg:#EFD9D7;
     --display: Georgia, "Iowan Old Style", "Times New Roman", serif;
     --body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --paper:#141817; --raised:#1D2321; --sunk:#0F1312;
-      --ink:#E6E9E4; --ink-mid:#B3BAB6; --ink-soft:#838C88;
-      --rule:#2E3634; --rule-soft:#242B29;
-      --accent:#6FBDB7; --accent-bg:#14302E;
-      --brass:#CBA059;
-      --ok:#7FB183; --ok-bg:#18291A;
-      --warn:#CBA059; --warn-bg:#2B2314;
-      --fail:#C97D7D; --fail-bg:#2C1A1A;
+      --paper:#141817; --raised:#1E2422; --sunk:#0E1211;
+      --ink:#EDF0EB; --ink-mid:#BFC6C2; --ink-soft:#909996;
+      --rule:#333B39; --rule-soft:#272E2C;
+      --accent:#7FC9C3; --accent-bg:#14322F;
+      --brass:#D6AC64;
+      --ok:#8CBE90; --ok-bg:#1A2D1D;
+      --warn:#D6AC64; --warn-bg:#2D2415;
+      --fail:#D08A8A; --fail-bg:#2E1B1B;
     }
   }
 
   *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
   body {
     background:var(--paper); color:var(--ink);
-    font-family:var(--body); font-size:16px; line-height:1.6;
+    font-family:var(--body); font-size:19px; line-height:1.65;
     -webkit-font-smoothing:antialiased;
   }
   .wrap {
-    max-width:1040px; margin:0 auto;
-    padding:clamp(24px,5vw,60px) clamp(16px,4vw,36px) 90px;
-    display:flex; flex-direction:column; gap:50px;
+    max-width:1180px; margin:0 auto;
+    padding:clamp(20px,3vw,40px) clamp(14px,2.5vw,26px) 80px;
+    display:flex; flex-direction:column; gap:44px;
   }
-  .prose { max-width:66ch; }
+  .prose { max-width:64ch; }
 
+  /* ── masthead ── */
   .masthead { display:flex; flex-direction:column; gap:16px; }
   .eyebrow {
-    font-family:var(--mono); font-size:11.5px; letter-spacing:.16em;
+    font-family:var(--mono); font-size:13px; letter-spacing:.12em;
     text-transform:uppercase; color:var(--brass);
-    display:flex; flex-wrap:wrap; gap:8px 16px;
+    display:flex; flex-wrap:wrap; gap:6px 18px;
   }
   h1 {
     font-family:var(--display); font-weight:400;
-    font-size:clamp(30px,5.2vw,48px); line-height:1.08;
+    font-size:clamp(34px,5.6vw,54px); line-height:1.1;
     letter-spacing:-.015em; text-wrap:balance;
   }
   .rule-heavy { height:3px; background:var(--ink); border:0; }
   .rule-hair { height:1px; background:var(--rule); border:0; }
+  .lede { color:var(--ink-mid); font-size:20px; max-width:62ch; }
 
   h2 {
     font-family:var(--display); font-weight:400;
-    font-size:clamp(23px,3.2vw,32px); letter-spacing:-.01em; text-wrap:balance;
+    font-size:clamp(27px,3.6vw,38px); letter-spacing:-.01em; text-wrap:balance;
   }
   h2 .tag {
-    font-family:var(--mono); font-size:12.5px; color:var(--accent);
-    border:1px solid var(--accent); padding:2px 8px;
-    vertical-align:middle; margin-right:11px; letter-spacing:.06em;
+    font-family:var(--mono); font-size:15px; color:var(--accent);
+    border:2px solid var(--accent); padding:2px 10px;
+    vertical-align:middle; margin-right:12px; letter-spacing:.05em;
   }
-  h3 { font-family:var(--display); font-weight:400; font-size:20px; }
+  h3 { font-family:var(--display); font-weight:400; font-size:25px; line-height:1.25; }
   .sec { display:flex; flex-direction:column; gap:20px; }
-  .sec-head { display:flex; flex-direction:column; gap:9px; }
-  .sec-head .note { color:var(--ink-mid); font-size:14.5px; max-width:74ch; }
+  .sec-head { display:flex; flex-direction:column; gap:10px; }
+  .sec-head .note { color:var(--ink-mid); font-size:17.5px; max-width:70ch; }
 
-  a { color:var(--accent); text-underline-offset:2px; }
-  a:hover { text-decoration-thickness:2px; }
-  a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  a { color:var(--accent); text-underline-offset:3px; text-decoration-thickness:1.5px; }
+  a:hover { text-decoration-thickness:3px; }
+  a:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
 
   .creed {
-    border:1px solid var(--accent); background:var(--accent-bg);
-    padding:20px 22px; display:flex; flex-direction:column; gap:7px;
+    border:2px solid var(--accent); background:var(--accent-bg);
+    padding:24px 26px; display:flex; flex-direction:column; gap:8px;
   }
   .creed .t {
-    font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+    font-family:var(--mono); font-size:13px; letter-spacing:.12em;
     text-transform:uppercase; color:var(--accent);
   }
   .creed p {
-    font-family:var(--display); font-size:clamp(17px,2.3vw,22px);
-    line-height:1.42; max-width:58ch; text-wrap:pretty;
+    font-family:var(--display); font-size:clamp(21px,2.7vw,28px);
+    line-height:1.4; max-width:56ch; text-wrap:pretty; color:var(--ink);
   }
 
   .chip {
-    display:inline-block; font-family:var(--mono); font-size:10.5px;
-    letter-spacing:.05em; text-transform:uppercase; padding:2.5px 7px;
-    border:1px solid currentColor; white-space:nowrap;
+    display:inline-block; font-family:var(--mono); font-size:12.5px;
+    letter-spacing:.04em; text-transform:uppercase; padding:4px 9px;
+    border:1.5px solid currentColor; white-space:nowrap; font-weight:600;
   }
   .chip.ok{color:var(--ok);background:var(--ok-bg);}
   .chip.warn{color:var(--warn);background:var(--warn-bg);}
   .chip.fail{color:var(--fail);background:var(--fail-bg);}
   .chip.pick{color:var(--accent);background:var(--accent-bg);}
 
-  .dossiers { display:flex; flex-direction:column; gap:1px; background:var(--rule); border:1px solid var(--rule); }
-  .dos { background:var(--raised); padding:24px clamp(16px,3vw,28px); display:flex; flex-direction:column; gap:13px; }
+  /* ── galleries ── */
+  .gallery {
+    display:grid; grid-template-columns:repeat(4,1fr);
+    gap:6px; margin:2px 0;
+  }
+  .shot {
+    display:block; overflow:hidden; background:var(--sunk);
+    border:1px solid var(--rule); position:relative; line-height:0;
+  }
+  .shot.hero { grid-column:span 4; }
+  .shot img {
+    width:100%; height:100%; object-fit:cover; display:block;
+    transition:transform .35s ease;
+  }
+  .shot.hero img { aspect-ratio:16/9; }
+  .shot:not(.hero) img { aspect-ratio:4/3; }
+  .shot:hover img { transform:scale(1.04); }
+  .shot:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  .gallery-note {
+    font-family:var(--mono); font-size:12.5px; color:var(--ink-soft);
+    letter-spacing:.03em;
+  }
+  @media (max-width:620px) {
+    .gallery { grid-template-columns:repeat(2,1fr); }
+    .shot.hero { grid-column:span 2; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    .shot img { transition:none; }
+    .shot:hover img { transform:none; }
+  }
+
+  /* ── dossiers ── */
+  .dossiers { display:flex; flex-direction:column; gap:2px; background:var(--rule); border:1px solid var(--rule); }
+  .dos { background:var(--raised); padding:26px clamp(16px,2.5vw,30px); display:flex; flex-direction:column; gap:16px; }
   .dos.pick { background:var(--accent-bg); }
-  .dos-head { display:flex; gap:11px; align-items:baseline; flex-wrap:wrap; }
+  .dos-head { display:flex; gap:12px; align-items:baseline; flex-wrap:wrap; }
   .dos-head .cost {
     margin-left:auto; font-family:var(--mono);
-    font-variant-numeric:tabular-nums; font-size:16.5px; white-space:nowrap;
+    font-variant-numeric:tabular-nums; font-size:19px; white-space:nowrap; font-weight:600;
   }
-  .dos p { color:var(--ink-mid); max-width:78ch; }
+  .dos p { color:var(--ink-mid); max-width:72ch; }
   .dos strong { color:var(--ink); }
   .dos blockquote {
-    padding-left:14px; border-left:2px solid var(--rule);
-    font-family:var(--display); font-style:italic;
-    color:var(--ink-mid); max-width:70ch;
+    padding-left:16px; border-left:3px solid var(--rule);
+    font-family:var(--display); font-style:italic; font-size:19px;
+    color:var(--ink-mid); max-width:66ch;
   }
 
-  .specs { display:flex; flex-wrap:wrap; border:1px solid var(--rule); font-family:var(--mono); font-size:12.5px; }
-  .specs div { padding:8px 12px; border-right:1px solid var(--rule); display:flex; flex-direction:column; gap:2px; flex:1 1 118px; }
+  .specs { display:flex; flex-wrap:wrap; border:1px solid var(--rule); font-family:var(--mono); }
+  .specs div { padding:10px 14px; border-right:1px solid var(--rule); display:flex; flex-direction:column; gap:3px; flex:1 1 130px; }
   .specs div:last-child { border-right:0; }
-  .specs .k { font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); }
-  .specs .v { font-variant-numeric:tabular-nums; }
+  .specs .k { font-size:12px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-soft); }
+  .specs .v { font-size:16px; font-variant-numeric:tabular-nums; font-weight:600; }
 
-  .links {
-    display:flex; flex-wrap:wrap; gap:8px 10px;
-    border-top:1px solid var(--rule-soft); padding-top:12px;
-  }
+  .links { display:flex; flex-wrap:wrap; gap:10px; border-top:1px solid var(--rule-soft); padding-top:16px; }
   .links a, .links span.tel {
-    font-family:var(--mono); font-size:12.5px;
-    border:1px solid var(--rule); background:var(--paper);
-    padding:5px 10px; text-decoration:none; color:var(--accent);
-    display:inline-block;
+    font-family:var(--mono); font-size:15px;
+    border:1.5px solid var(--rule); background:var(--paper);
+    padding:10px 16px; text-decoration:none; color:var(--accent);
+    display:inline-block; font-weight:600;
   }
-  .links a:hover { border-color:var(--accent); }
+  .links a:hover { border-color:var(--accent); background:var(--accent-bg); }
   .links span.tel { color:var(--ink-mid); }
 
-  .risk { border-top:1px solid var(--rule-soft); padding-top:11px; font-size:13.5px; color:var(--ink-mid); max-width:78ch; }
+  .risk { border-top:1px solid var(--rule-soft); padding-top:14px; font-size:17px; color:var(--ink-mid); max-width:72ch; }
   .risk b {
-    font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
+    font-family:var(--mono); font-size:12.5px; letter-spacing:.08em;
     text-transform:uppercase; color:var(--fail);
-    display:block; margin-bottom:3px; font-weight:400;
+    display:block; margin-bottom:5px; font-weight:700;
   }
 
   .alert {
-    border:1px solid var(--rule); border-left:3px solid var(--warn);
-    background:var(--raised); padding:17px 19px;
-    display:flex; flex-direction:column; gap:8px;
+    border:1px solid var(--rule); border-left:5px solid var(--warn);
+    background:var(--raised); padding:20px 22px;
+    display:flex; flex-direction:column; gap:9px;
   }
   .alert.stop { border-left-color:var(--fail); }
-  .alert-t { font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--warn); }
+  .alert-t { font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--warn); font-weight:700; }
   .alert.stop .alert-t { color:var(--fail); }
-  .alert p { color:var(--ink-mid); max-width:76ch; }
+  .alert p { color:var(--ink-mid); max-width:72ch; }
   .alert strong { color:var(--ink); }
 
+  /* ── chef table ── */
   .scroller { overflow-x:auto; border:1px solid var(--rule); background:var(--raised); }
-  table { border-collapse:collapse; width:100%; min-width:640px; font-size:13.5px; }
+  table { border-collapse:collapse; width:100%; min-width:660px; font-size:16.5px; }
   thead th {
-    text-align:left; font-family:var(--mono); font-weight:400; font-size:10.5px;
-    letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft);
-    padding:11px; border-bottom:2px solid var(--ink); background:var(--sunk); white-space:nowrap;
+    text-align:left; font-family:var(--mono); font-weight:700; font-size:12.5px;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);
+    padding:14px; border-bottom:3px solid var(--ink); background:var(--sunk); white-space:nowrap;
   }
-  tbody td { padding:12px 11px; border-bottom:1px solid var(--rule-soft); vertical-align:top; }
+  tbody td { padding:15px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:top; }
   tbody tr:last-child td { border-bottom:0; }
   .num { font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; }
-  .pname { font-weight:600; color:var(--ink); display:block; }
-  .pmeta { color:var(--ink-soft); font-size:12px; display:block; margin-top:3px; }
+  .pname { font-weight:700; color:var(--ink); display:block; font-size:17.5px; }
 
-  footer { border-top:1px solid var(--rule); padding-top:20px; font-size:12.5px; color:var(--ink-soft); max-width:78ch; display:flex; flex-direction:column; gap:10px; }
+  /* ── house cards ── */
+  .houses { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:18px; }
+  .house { border:1px solid var(--rule); background:var(--raised); display:flex; flex-direction:column; }
+  .house > a.thumb { display:block; line-height:0; border-bottom:1px solid var(--rule); overflow:hidden; }
+  .house > a.thumb img { width:100%; aspect-ratio:3/2; object-fit:cover; display:block; transition:transform .35s ease; }
+  .house > a.thumb:hover img { transform:scale(1.04); }
+  .house .noimg {
+    aspect-ratio:3/2; display:flex; align-items:center; justify-content:center;
+    background:var(--sunk); border-bottom:1px solid var(--rule);
+    font-family:var(--mono); font-size:13.5px; color:var(--ink-soft); text-align:center; padding:16px;
+  }
+  .house .hbody { padding:18px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .house h4 { font-family:var(--display); font-weight:400; font-size:22px; line-height:1.25; }
+  .house .hmeta { font-family:var(--mono); font-size:14.5px; color:var(--ink-soft); }
+  .house p { font-size:16.5px; color:var(--ink-mid); }
+  .house .hfoot { margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; padding-top:8px; }
+  .house .hprice { font-family:var(--mono); font-size:21px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .house .hlink {
+    font-family:var(--mono); font-size:14.5px; font-weight:600; text-decoration:none;
+    border:1.5px solid var(--rule); padding:9px 14px; display:inline-block;
+  }
+  .house .hlink:hover { border-color:var(--accent); background:var(--accent-bg); }
+
+  footer { border-top:2px solid var(--rule); padding-top:22px; font-size:15.5px; color:var(--ink-soft); max-width:74ch; display:flex; flex-direction:column; gap:12px; }
 </style>
 </head>
 <body>
@@ -181,10 +236,10 @@
     </div>
     <h1>Where we eat Thanksgiving dinner</h1>
     <hr class="rule-heavy">
-    <p class="prose" style="color:var(--ink-mid);font-size:17px;">
-      Three genuinely different ways to do this, all researched, all with links so you can look
-      for yourself. Have a click through and say what appeals. Nothing has been booked and nobody
-      has been called yet &mdash; this is for deciding, not confirming.
+    <p class="lede">
+      Three genuinely different ways to do this. Every photo below can be clicked to see it full
+      size, and every place links straight through to its own page so you can look properly and
+      make up your own mind. Have a browse and say what appeals.
     </p>
   </header>
 
@@ -198,10 +253,10 @@
 
   <section class="sec">
     <p class="prose" style="color:var(--ink-mid);">
-      Everything else is negotiable. All three options below clear that bar &mdash; private chefs
-      and restaurants both include serving and cleaning up as standard. So they don't really
-      compete on quality of food. They compete on <strong>how long the day lasts and who's in the
-      room</strong>. That's the actual choice.
+      Everything else is negotiable. All three options clear that bar &mdash; private chefs and
+      restaurants both include serving and washing up as standard. So they don't really compete on
+      the food. They compete on <strong>how long the day lasts and who's in the room</strong>.
+      That's the actual choice.
     </p>
   </section>
 
@@ -211,8 +266,8 @@
       <h2><span class="tag">Option A</span>A historic house, just for the day</h2>
       <hr class="rule-hair">
       <p class="note">
-        Rent a period home by the hour and bring a chef into it. Both places below give a discount
-        on long bookings, so the plan would be to take the house for <strong>eight hours</strong>
+        Rent a period home by the hour and bring a chef into it. Both places give a discount on
+        long bookings, so the plan would be to take the house for <strong>eight hours</strong>
         &mdash; late morning through the evening &mdash; rather than just a dinner slot.
       </p>
     </div>
@@ -224,6 +279,21 @@
           <h3>Downtown Victorian, Tri-Level Home</h3>
           <span class="cost">about $884 for the day</span>
         </div>
+
+        <div class="gallery">
+          <a class="shot hero" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/yn9dl8aensn6au1gfmcb" target="_blank" rel="noopener">
+            <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_1200/yn9dl8aensn6au1gfmcb" alt="The Victorian's main room, with chandelier and original woodwork" loading="lazy"></a>
+          <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/gtsyakxvr8wfuwahtqox" target="_blank" rel="noopener">
+            <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/gtsyakxvr8wfuwahtqox" alt="Interior of the Victorian" loading="lazy"></a>
+          <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/ajf4zhxzv2kf2sspygen" target="_blank" rel="noopener">
+            <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/ajf4zhxzv2kf2sspygen" alt="Another room in the Victorian" loading="lazy"></a>
+          <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/aw8zznpwbzabnd2hhzz7" target="_blank" rel="noopener">
+            <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/aw8zznpwbzabnd2hhzz7" alt="Period detailing in the Victorian" loading="lazy"></a>
+          <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/p8vp8ucu8c32zac3ryab" target="_blank" rel="noopener">
+            <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/p8vp8ucu8c32zac3ryab" alt="Further view of the Victorian" loading="lazy"></a>
+        </div>
+        <p class="gallery-note">Click any photo to see it full size. More on the listing.</p>
+
         <p>
           A 3,500 sq ft Victorian over three floors in <strong>Midtown</strong>, with a drawing
           room, a proper dining room, a study and a garden. Rated 5.0 from 19 bookings. Of
@@ -232,17 +302,17 @@
         <blockquote>
           &ldquo;Soaring ceilings, intricate crown moldings, spectacular chandeliers, and original
           hardwood floors&rdquo; &mdash; plus bay windows, an elegant staircase and period
-          furnishings. There's a video tour on the listing.
+          furnishings. There's a video tour on the listing too.
         </blockquote>
         <div class="specs">
           <div><span class="k">Rate</span><span class="v">$130/hr</span></div>
-          <div><span class="k">Minimum</span><span class="v">3 hrs</span></div>
+          <div><span class="k">Minimum</span><span class="v">3 hours</span></div>
           <div><span class="k">8+ hours</span><span class="v">15% off</span></div>
           <div><span class="k">Holds</span><span class="v">25 people</span></div>
           <div><span class="k">Rating</span><span class="v">5.0 (19)</span></div>
         </div>
         <div class="links">
-          <a href="https://www.peerspace.com/pages/listings/65d7e78ad910581451c1fb6c">See the listing and photos &rarr;</a>
+          <a href="https://www.peerspace.com/pages/listings/65d7e78ad910581451c1fb6c">See the full listing &rarr;</a>
         </div>
         <div class="risk">
           <b>Still need to check</b>
@@ -257,6 +327,21 @@
           <h3>Restored 1917 Firehouse</h3>
           <span class="cost">about $1,224 for the day</span>
         </div>
+
+        <div class="gallery">
+          <a class="shot hero" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/ov2sueakzydvlvc2eeeg" target="_blank" rel="noopener">
+            <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_1200/ov2sueakzydvlvc2eeeg" alt="The converted 1917 firehouse" loading="lazy"></a>
+          <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/jrhzrf8wyi6ezlpu7hq7" target="_blank" rel="noopener">
+            <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/jrhzrf8wyi6ezlpu7hq7" alt="Inside the firehouse conversion" loading="lazy"></a>
+          <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/ftop3vnaiafjnfaigllo" target="_blank" rel="noopener">
+            <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/ftop3vnaiafjnfaigllo" alt="Kitchen and dining area of the firehouse" loading="lazy"></a>
+          <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/lapofexq2vldio0tzqe1" target="_blank" rel="noopener">
+            <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/lapofexq2vldio0tzqe1" alt="Living space in the firehouse" loading="lazy"></a>
+          <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/amgeebm8ejpan9o6tz27" target="_blank" rel="noopener">
+            <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/amgeebm8ejpan9o6tz27" alt="Further view of the firehouse" loading="lazy"></a>
+        </div>
+        <p class="gallery-note">Click any photo to see it full size.</p>
+
         <p>
           An actual 1917 fire station in <strong>Curtis Park</strong>, converted into a 3,700 sq ft
           home. The old engine garage is now a big kitchen-dining-living room with a backlit onyx
@@ -266,17 +351,17 @@
         <p>
           The character is odd rather than elegant: the <strong>firepole is still there</strong>,
           along with craftsman woodwork, two sets of firehouse doors on the front, and a boy scout
-          badge inlaid into the floor. Also has three bedrooms.
+          badge inlaid into the floor.
         </p>
         <div class="specs">
           <div><span class="k">Rate</span><span class="v">$170/hr</span></div>
-          <div><span class="k">Minimum</span><span class="v">4 hrs</span></div>
+          <div><span class="k">Minimum</span><span class="v">4 hours</span></div>
           <div><span class="k">8+ hours</span><span class="v">10% off</span></div>
           <div><span class="k">Holds</span><span class="v">30 people</span></div>
           <div><span class="k">Rating</span><span class="v">5.0 (18)</span></div>
         </div>
         <div class="links">
-          <a href="https://www.peerspace.com/pages/listings/64f90f978bb254000e910a4d">See the listing and photos &rarr;</a>
+          <a href="https://www.peerspace.com/pages/listings/64f90f978bb254000e910a4d">See the full listing &rarr;</a>
         </div>
         <div class="risk">
           <b>Still need to check</b>
@@ -294,11 +379,11 @@
       <h2><span class="tag">Option B</span>Just a chef, no venue</h2>
       <hr class="rule-hair">
       <p class="note">
-        No venue booking at all &mdash; a private chef comes to wherever we gather. The booking site describes it
-        plainly: <strong>&ldquo;Chef shops for ingredients, cooks in your kitchen, you enjoy the
-        meal, and chef cleans up.&rdquo;</strong> All four chefs below are based in downtown
-        Sacramento and booked through the same number. Most bookings cancel free with 48 hours'
-        notice.
+        No venue booking at all &mdash; a private chef comes to wherever we gather. The booking
+        site describes it plainly: <strong>&ldquo;Chef shops for ingredients, cooks in your
+        kitchen, you enjoy the meal, and chef cleans up.&rdquo;</strong> All four are based in
+        downtown Sacramento and booked through the same number. Most bookings cancel free with 48
+        hours' notice.
       </p>
     </div>
 
@@ -346,13 +431,14 @@
           day than how many cuisines they can do.
         </p>
         <div class="links">
-          <a href="https://www.cozymeal.com/sacramento/personal-chefs">Browse all Sacramento chefs &rarr;</a>
-          <span class="tel">Book by phone &middot; 916-272-0334</span>
+          <a href="https://www.cozymeal.com/sacramento/personal-chefs">See all Sacramento chefs and their menus &rarr;</a>
+          <span class="tel">916-272-0334</span>
         </div>
         <div class="risk">
           <b>Still need to check</b>
           Whether she's free on Thanksgiving Day itself and whether there's a holiday surcharge
-          &mdash; those prices are the normal rate. Also worth describing the kitchen to her before booking.
+          &mdash; those prices are the normal rate. Also worth describing the kitchen to her before
+          booking.
         </div>
       </article>
 
@@ -363,8 +449,8 @@
         </div>
         <p>
           Chef Andy Suarez does bespoke tasting menus at <strong>8, 12 or 15 courses</strong>
-          &mdash; caviar, A5 wagyu, langoustine, venison, chocolate soufflé. This is a different
-          kind of evening to Thanksgiving, but it's there if that appeals more.
+          &mdash; caviar, wagyu, langoustine, venison, chocolate soufflé. A different sort of
+          evening to Thanksgiving, but it's there if that appeals more.
         </p>
         <div class="links">
           <a href="https://www.chefandysuarez.com/luxury-tasting-menu">See the tasting menus &rarr;</a>
@@ -372,7 +458,7 @@
         <div class="risk">
           <b>Unconfirmed</b>
           His site doesn't actually say he covers Sacramento, doesn't publish prices, and doesn't
-          confirm whether serving and cleanup are included. Treat this as a maybe, not an option.
+          confirm whether serving and washing up are included. Treat this as a maybe, not an option.
         </div>
       </article>
 
@@ -384,7 +470,8 @@
         <p>
           Worth saying: this is fixable. Party hire firms deliver a table for eight with linens,
           glasses, china and cutlery, set it up and take it away afterwards. A
-          <strong>60-inch round seats eight</strong> as standard. So a room that looks too small might just be a room without the right table.
+          <strong>60-inch round seats eight</strong> as standard. So a room that looks too small
+          might just be a room without the right table.
         </p>
         <div class="links">
           <a href="https://www.elitepartyrent.com/table-and-chair-rental/">Elite Party Rentals &rarr;</a>
@@ -405,8 +492,8 @@
       <h2><span class="tag">Option C</span>All of us under one roof, for three nights</h2>
       <hr class="rule-hair">
       <p class="note">
-        The only option that gets us <strong>days together instead of hours</strong>, with everyone in the same
-        building. The historic inns do lodging, venue and kitchen in a single booking.
+        The only option that gets us <strong>days together instead of hours</strong>, with everyone
+        in the same building. The historic inns do lodging, venue and kitchen in a single booking.
       </p>
     </div>
 
@@ -417,10 +504,18 @@
           <h3>Vizcaya Sacramento</h3>
           <span class="cost">rates not published</span>
         </div>
+
+        <div class="gallery">
+          <a class="shot hero" href="https://static.showit.co/1200/9oomU8WoSZ-hJs0tffLGWQ/69903/batchelor-0001.jpg" target="_blank" rel="noopener">
+            <img src="https://static.showit.co/1200/9oomU8WoSZ-hJs0tffLGWQ/69903/batchelor-0001.jpg" alt="Vizcaya, an 1889 mansion in Midtown Sacramento" loading="lazy"></a>
+        </div>
+        <p class="gallery-note">One photo only from their site &mdash; there are many more on vizcayasacramento.com.</p>
+
         <p>
           An 1889 mansion with a Victorian tower and columned entrance, 6,500 sq ft, in
           <strong>Midtown</strong>. <strong>Eight en-suite bedrooms</strong> across the main house
-          and carriage house, including a 900 sq ft penthouse suite &mdash; so there is room for all eight of us.
+          and carriage house, including a 900 sq ft penthouse suite &mdash; so there is room for
+          all eight of us.
         </p>
         <p>
           The big advantage: they have <strong>their own kitchen team and build menus to
@@ -435,9 +530,9 @@
         <div class="risk">
           <b>Still need to check</b>
           There's <strong>no guest kitchen</strong>, so no making your own coffee or raiding
-          leftovers over four days. Rates aren't published anywhere. The two questions that decide
-          it: does their kitchen team work Thanksgiving Day, and can we book it as somewhere to
-          stay without signing an event contract?
+          leftovers. Rates aren't published anywhere. The two questions that decide it: does their
+          kitchen team work Thanksgiving Day, and can we book it as somewhere to stay without
+          signing an event contract?
         </div>
       </article>
 
@@ -446,11 +541,26 @@
           <h3>Grand Island Mansion</h3>
           <span class="cost">read the warning</span>
         </div>
+
+        <div class="gallery">
+          <a class="shot hero" href="https://grandislandmansion.com/wp-content/uploads/2017/01/front.jpg" target="_blank" rel="noopener">
+            <img src="https://grandislandmansion.com/wp-content/uploads/2017/01/front.jpg" alt="The front of Grand Island Mansion" loading="lazy"></a>
+          <a class="shot" href="https://grandislandmansion.com/wp-content/uploads/2017/01/aerial.jpg" target="_blank" rel="noopener">
+            <img src="https://grandislandmansion.com/wp-content/uploads/2017/01/aerial.jpg" alt="Aerial view of the mansion and grounds" loading="lazy"></a>
+          <a class="shot" href="https://grandislandmansion.com/wp-content/uploads/2019/05/rear2.jpg" target="_blank" rel="noopener">
+            <img src="https://grandislandmansion.com/wp-content/uploads/2019/05/rear2.jpg" alt="Rear of the mansion" loading="lazy"></a>
+          <a class="shot" href="https://grandislandmansion.com/wp-content/uploads/2017/01/gazebo.jpg" target="_blank" rel="noopener">
+            <img src="https://grandislandmansion.com/wp-content/uploads/2017/01/gazebo.jpg" alt="The gazebo in the mansion grounds" loading="lazy"></a>
+          <a class="shot" href="https://grandislandmansion.com/wp-content/uploads/2017/01/pool.jpg" target="_blank" rel="noopener">
+            <img src="https://grandislandmansion.com/wp-content/uploads/2017/01/pool.jpg" alt="The pool at the mansion" loading="lazy"></a>
+        </div>
+        <p class="gallery-note">Click any photo to see it full size.</p>
+
         <p>
           A restored 1920s estate on the river at Walnut Grove with <strong>11 period
           bedrooms</strong>, its own kitchen doing California regional cooking, plated dinners and
-          an on-site bakery. On looks alone it's the most beautiful place found anywhere in this
-          search. About 35 minutes south of Sacramento.
+          an on-site bakery. On looks alone it's the most beautiful place found anywhere. About 35
+          minutes south of Sacramento.
         </p>
         <div class="specs">
           <div><span class="k">Mansion fee</span><span class="v">$3,000</span></div>
@@ -465,7 +575,7 @@
         <div class="risk">
           <b>Don't book this as an event</b>
           Their events department wants a $3,000 room fee plus an <strong>$8,000 minimum spend on
-          food</strong> &mdash; that's wedding pricing and it works out around $1,375 each for
+          food</strong> &mdash; that's wedding pricing, and it works out around $1,375 each for
           eight of us. But they also run an ordinary restaurant that takes OpenTable bookings and
           does Sunday brunch. <strong>Book bedrooms and a restaurant table, not an event</strong>,
           and it becomes affordable.
@@ -477,6 +587,12 @@
           <h3>The Inn &amp; Spa at Parkside</h3>
           <span class="cost">rates not published</span>
         </div>
+
+        <div class="gallery">
+          <a class="shot hero" href="https://irp.cdn-website.com/6cf51c60/dms3rep/multi/opt/a4586b91-9b8c-4f95-bec5-2a79778aef48-1920w.webp" target="_blank" rel="noopener">
+            <img src="https://irp.cdn-website.com/6cf51c60/dms3rep/multi/opt/a4586b91-9b8c-4f95-bec5-2a79778aef48-1920w.webp" alt="The Inn and Spa at Parkside" loading="lazy"></a>
+        </div>
+
         <p>
           The historic Fong Mansion, built 1936, plus the Parkside Villa, downtown next to
           Southside Park. Around twelve rooms. They host weddings and events regularly, so a
@@ -489,64 +605,113 @@
         </div>
         <div class="risk">
           <b>Almost nothing is published</b>
-          No room count, no rates, no dining capacity, no policy on buying out the whole place.
+          No room count, no rates, no dining capacity, no policy on taking the whole place.
           Everything here depends on one phone call.
         </div>
       </article>
+    </div>
+  </section>
 
-      <article class="dos">
-        <div class="dos-head">
-          <h3>Or just rent a house</h3>
-          <span class="cost">$1,018&ndash;2,518</span>
-        </div>
-        <p>
-          Eleven houses were available in the neighbourhoods we'd want, for these dates. Only
-          <strong>one confirms a dining table that actually seats eight</strong> &mdash; the Land
-          Park house, which says so four times in its own photo captions, including one calling it
-          a formal dining room. It's on both sites; <strong>Airbnb is $324 cheaper</strong> for the
-          identical house.
-        </p>
-        <div class="scroller">
-          <table>
-            <thead>
-              <tr><th>House</th><th>Where</th><th>Size</th><th>Seats 8?</th><th>Total</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="pname"><a href="https://www.airbnb.com/rooms/660848184980620189">Sacramento Retreat</a></span><span class="pmeta">4.94 from 194 stays &middot; gas cooker, dishwasher, real fireplace, pool</span></td>
-                <td>Land Park</td><td class="num">4 bed / 7 beds</td>
-                <td><span class="chip ok">Yes</span></td><td class="num">$2,518</td>
-              </tr>
-              <tr>
-                <td><span class="pname"><a href="https://www.airbnb.com/rooms/1737272827589416048">Historic Victorian</a></span><span class="pmeta">Brand new listing &middot; fireplace and pool table, but no dishwasher</span></td>
-                <td>Midtown</td><td class="num">3 bed / 5 beds</td>
-                <td><span class="chip warn">Not stated</span></td><td class="num">$1,118</td>
-              </tr>
-              <tr>
-                <td><span class="pname"><a href="https://www.vrbo.com/3502651">LOVE VILLA Midtown</a></span><span class="pmeta">9.2 from 46 stays &middot; only on VRBO, not Airbnb</span></td>
-                <td>Midtown</td><td class="num">3 bed / 4 beds</td>
-                <td><span class="chip warn">Not stated</span></td><td class="num">$1,018</td>
-              </tr>
-              <tr>
-                <td><span class="pname"><a href="https://www.airbnb.com/rooms/1612450190756304556">5 bed single storey</a></span><span class="pmeta">5.0 from 14 stays &middot; step-free throughout, sleeps exactly 8</span></td>
-                <td>Curtis Park</td><td class="num">5 bed / 5 queens</td>
-                <td><span class="chip warn">Not stated</span></td><td class="num">$1,580</td>
-              </tr>
-              <tr>
-                <td><span class="pname"><a href="https://www.airbnb.com/rooms/1110965989397796620">Casa Bella</a></span><span class="pmeta">4.85 from 26 stays &middot; gas cooker and dishwasher</span></td>
-                <td>Downtown</td><td class="num">4 bed / 7 beds</td>
-                <td><span class="chip warn">Not stated</span></td><td class="num">$1,309</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="risk">
-          <b>Why these come last</b>
-          A rented house still leaves us with a kitchen we have to staff ourselves and a dining
-          room nobody has measured. The inns turn up with a kitchen team already in the building.
-          Houses only win if we want the place completely to ourselves.
+  <!-- HOUSES -->
+  <section class="sec">
+    <div class="sec-head">
+      <h2>Or just rent a house</h2>
+      <hr class="rule-hair">
+      <p class="note">
+        Eleven houses were free in the neighbourhoods we'd want, for these dates. Only
+        <strong>one confirms a dining table that actually seats eight</strong> &mdash; the Land
+        Park house, which says so four times in its own photo captions. Prices are the full total
+        including all fees, for three nights.
+      </p>
+    </div>
+
+    <div class="houses">
+      <article class="house">
+        <a class="thumb" href="https://www.airbnb.com/rooms/660848184980620189" target="_blank" rel="noopener">
+          <img src="https://a0.muscache.com/im/pictures/prohost-api/Hosting-660848184980620189/original/74a4555e-9107-4a1a-8ee5-e1ba8af1ac4a.jpeg?im_w=720" alt="Sacramento Retreat in Land Park" loading="lazy"></a>
+        <div class="hbody">
+          <h4>Sacramento Retreat</h4>
+          <span class="hmeta">Land Park &middot; 4 bed / 7 beds &middot; 4.94 from 194 stays</span>
+          <p><span class="chip ok">Seats 8 &mdash; confirmed</span></p>
+          <p>Gas cooker, dishwasher, real fireplace, pool and hot tub. Also on VRBO, but
+             <strong>$324 dearer there</strong> for the identical house.</p>
+          <div class="hfoot">
+            <span class="hprice">$2,518</span>
+            <a class="hlink" href="https://www.airbnb.com/rooms/660848184980620189" target="_blank" rel="noopener">View &rarr;</a>
+          </div>
         </div>
       </article>
+
+      <article class="house">
+        <a class="thumb" href="https://www.airbnb.com/rooms/1737272827589416048" target="_blank" rel="noopener">
+          <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1737272827589416048/original/a76ebd89-1dad-459c-a409-9526e1ab81e9.jpeg?im_w=720" alt="Historic Victorian in Midtown" loading="lazy"></a>
+        <div class="hbody">
+          <h4>Historic Victorian</h4>
+          <span class="hmeta">Midtown &middot; 3 bed / 5 beds &middot; brand new listing</span>
+          <p><span class="chip warn">Table size not stated</span></p>
+          <p>Fireplace and a pool table. No dishwasher, and no reviews yet since it's newly listed.</p>
+          <div class="hfoot">
+            <span class="hprice">$1,118</span>
+            <a class="hlink" href="https://www.airbnb.com/rooms/1737272827589416048" target="_blank" rel="noopener">View &rarr;</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="house">
+        <div class="noimg">Photo wouldn&rsquo;t load through &mdash; see the listing</div>
+        <div class="hbody">
+          <h4>LOVE VILLA Midtown</h4>
+          <span class="hmeta">Midtown &middot; 3 bed / 4 beds &middot; 9.2 from 46 stays</span>
+          <p><span class="chip warn">Table size not stated</span></p>
+          <p>Only on VRBO, not Airbnb &mdash; so easy to miss. Cheapest of the lot, and very well
+             reviewed.</p>
+          <div class="hfoot">
+            <span class="hprice">$1,018</span>
+            <a class="hlink" href="https://www.vrbo.com/3502651" target="_blank" rel="noopener">View &rarr;</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="house">
+        <a class="thumb" href="https://www.airbnb.com/rooms/1612450190756304556" target="_blank" rel="noopener">
+          <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1612450190756304556/original/9d8f4d17-2ba4-4310-b3c1-bc8fd464de37.jpeg?im_w=720" alt="Five bedroom single storey house in Curtis Park" loading="lazy"></a>
+        <div class="hbody">
+          <h4>Five bed, single storey</h4>
+          <span class="hmeta">Curtis Park &middot; 5 bed / 5 queens &middot; 5.0 from 14 stays</span>
+          <p><span class="chip warn">Table size not stated</span></p>
+          <p>Step-free throughout with a level entrance, if that matters to anyone. Sleeps exactly
+             eight, so no spare capacity.</p>
+          <div class="hfoot">
+            <span class="hprice">$1,580</span>
+            <a class="hlink" href="https://www.airbnb.com/rooms/1612450190756304556" target="_blank" rel="noopener">View &rarr;</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="house">
+        <a class="thumb" href="https://www.airbnb.com/rooms/1110965989397796620" target="_blank" rel="noopener">
+          <img src="https://a0.muscache.com/im/pictures/miso/Hosting-1110965989397796620/original/384440f7-a708-4d8e-828b-579f4b3ed93e.png?im_w=720" alt="Casa Bella in downtown Sacramento" loading="lazy"></a>
+        <div class="hbody">
+          <h4>Casa Bella</h4>
+          <span class="hmeta">Downtown &middot; 4 bed / 7 beds &middot; 4.85 from 26 stays</span>
+          <p><span class="chip warn">Table size not stated</span></p>
+          <p>Gas cooker and dishwasher. The listing is very thin on detail &mdash; barely any
+             photos captioned or description written.</p>
+          <div class="hfoot">
+            <span class="hprice">$1,309</span>
+            <a class="hlink" href="https://www.airbnb.com/rooms/1110965989397796620" target="_blank" rel="noopener">View &rarr;</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="alert">
+      <span class="alert-t">Why these come last</span>
+      <p>
+        A rented house still leaves us with a kitchen we have to staff ourselves and a dining room
+        nobody has measured. The inns turn up with a kitchen team already in the building. Houses
+        only win if we want the place completely to ourselves.
+      </p>
     </div>
   </section>
 
@@ -554,32 +719,35 @@
     <div class="alert stop">
       <span class="alert-t">Before anyone gets attached to one</span>
       <p>
-        <strong>Nothing is booked and nobody has been rung yet.</strong> Every price here is one
-        that was published or listed online, not a quote. The same question hangs over all three
+        <strong>Nothing is booked and nobody has been rung yet.</strong> Every price here was
+        published or listed online, not quoted to us. The same question hangs over all three
         options: <strong>does each place actually work on Thanksgiving Day, and what do they charge
         extra for it?</strong> Beds stay available for months. Kitchens on Thanksgiving do not
-        &mdash; so the dinner is the bit to decide first.
+        &mdash; so the dinner is the bit to settle first.
       </p>
     </div>
     <div class="alert">
       <span class="alert-t">One question for everyone</span>
       <p>
         The dates are <strong>Wednesday 25 to Saturday 28 November</strong>, which is three
-        nights. If people would rather stay through Sunday that's four nights and all the lodging
-        prices change. Worth settling early.
+        nights. If people would rather carry on through Sunday that's four nights, and all the
+        lodging prices change. Worth settling early.
       </p>
     </div>
   </section>
 
   <footer>
     <p>
-      Prices found 18&ndash;19 August 2026 &mdash; 99 days before Thanksgiving. House totals include
-      all fees for three nights, 25&ndash;28 November 2026. Chef prices are per person multiplied by
-      eight and don't include any holiday surcharge. Venue day rates apply each listing's own
+      Prices found 18&ndash;19 August 2026, about three months before Thanksgiving. House totals
+      include all fees for three nights, 25&ndash;28 November 2026. Chef prices are per person
+      times eight and don't include any holiday surcharge. Venue day rates apply each listing's own
       long-booking discount to an eight-hour hire. Holiday prices move, so treat all of it as a
       snapshot rather than a quote.
     </p>
-    <p>A temporary planning page. Unlisted, but not password protected &mdash; anyone with the link can read it.</p>
+    <p>
+      Photos are shown straight from each listing, so they'll change if the owner changes them.
+      A temporary planning page &mdash; unlisted, but not password protected.
+    </p>
   </footer>
 
 </div>
