@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Thanksgiving 2026 — Sacramento</title>
+<link rel="icon" type="image/png" href="../assets/logos/Logo_Element_brass.png">
+<style>
+  :root {
+    --paper:#EDEEE9; --raised:#F7F8F4; --sunk:#E3E5DE;
+    --ink:#1A1F1E; --ink-mid:#454E4B; --ink-soft:#6B7370;
+    --rule:#CDD1C9; --rule-soft:#DDE0D8;
+    --accent:#1F5E5B; --accent-bg:#DCE7E4;
+    --brass:#8A6115;
+    --ok:#406E45; --ok-bg:#DDE7DA;
+    --warn:#8A6115; --warn-bg:#EFE4CB;
+    --fail:#8E3A3A; --fail-bg:#EEDCDA;
+    --display: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:#141817; --raised:#1D2321; --sunk:#0F1312;
+      --ink:#E6E9E4; --ink-mid:#B3BAB6; --ink-soft:#838C88;
+      --rule:#2E3634; --rule-soft:#242B29;
+      --accent:#6FBDB7; --accent-bg:#14302E;
+      --brass:#CBA059;
+      --ok:#7FB183; --ok-bg:#18291A;
+      --warn:#CBA059; --warn-bg:#2B2314;
+      --fail:#C97D7D; --fail-bg:#2C1A1A;
+    }
+  }
+
+  *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:var(--paper); color:var(--ink);
+    font-family:var(--body); font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap {
+    max-width:1040px; margin:0 auto;
+    padding:clamp(24px,5vw,60px) clamp(16px,4vw,36px) 90px;
+    display:flex; flex-direction:column; gap:50px;
+  }
+  .prose { max-width:66ch; }
+
+  .masthead { display:flex; flex-direction:column; gap:16px; }
+  .eyebrow {
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--brass);
+    display:flex; flex-wrap:wrap; gap:8px 16px;
+  }
+  h1 {
+    font-family:var(--display); font-weight:400;
+    font-size:clamp(30px,5.2vw,48px); line-height:1.08;
+    letter-spacing:-.015em; text-wrap:balance;
+  }
+  .rule-heavy { height:3px; background:var(--ink); border:0; }
+  .rule-hair { height:1px; background:var(--rule); border:0; }
+
+  h2 {
+    font-family:var(--display); font-weight:400;
+    font-size:clamp(23px,3.2vw,32px); letter-spacing:-.01em; text-wrap:balance;
+  }
+  h2 .tag {
+    font-family:var(--mono); font-size:12.5px; color:var(--accent);
+    border:1px solid var(--accent); padding:2px 8px;
+    vertical-align:middle; margin-right:11px; letter-spacing:.06em;
+  }
+  h3 { font-family:var(--display); font-weight:400; font-size:20px; }
+  .sec { display:flex; flex-direction:column; gap:20px; }
+  .sec-head { display:flex; flex-direction:column; gap:9px; }
+  .sec-head .note { color:var(--ink-mid); font-size:14.5px; max-width:74ch; }
+
+  a { color:var(--accent); text-underline-offset:2px; }
+  a:hover { text-decoration-thickness:2px; }
+  a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+  .creed {
+    border:1px solid var(--accent); background:var(--accent-bg);
+    padding:20px 22px; display:flex; flex-direction:column; gap:7px;
+  }
+  .creed .t {
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--accent);
+  }
+  .creed p {
+    font-family:var(--display); font-size:clamp(17px,2.3vw,22px);
+    line-height:1.42; max-width:58ch; text-wrap:pretty;
+  }
+
+  .chip {
+    display:inline-block; font-family:var(--mono); font-size:10.5px;
+    letter-spacing:.05em; text-transform:uppercase; padding:2.5px 7px;
+    border:1px solid currentColor; white-space:nowrap;
+  }
+  .chip.ok{color:var(--ok);background:var(--ok-bg);}
+  .chip.warn{color:var(--warn);background:var(--warn-bg);}
+  .chip.fail{color:var(--fail);background:var(--fail-bg);}
+  .chip.pick{color:var(--accent);background:var(--accent-bg);}
+
+  .dossiers { display:flex; flex-direction:column; gap:1px; background:var(--rule); border:1px solid var(--rule); }
+  .dos { background:var(--raised); padding:24px clamp(16px,3vw,28px); display:flex; flex-direction:column; gap:13px; }
+  .dos.pick { background:var(--accent-bg); }
+  .dos-head { display:flex; gap:11px; align-items:baseline; flex-wrap:wrap; }
+  .dos-head .cost {
+    margin-left:auto; font-family:var(--mono);
+    font-variant-numeric:tabular-nums; font-size:16.5px; white-space:nowrap;
+  }
+  .dos p { color:var(--ink-mid); max-width:78ch; }
+  .dos strong { color:var(--ink); }
+  .dos blockquote {
+    padding-left:14px; border-left:2px solid var(--rule);
+    font-family:var(--display); font-style:italic;
+    color:var(--ink-mid); max-width:70ch;
+  }
+
+  .specs { display:flex; flex-wrap:wrap; border:1px solid var(--rule); font-family:var(--mono); font-size:12.5px; }
+  .specs div { padding:8px 12px; border-right:1px solid var(--rule); display:flex; flex-direction:column; gap:2px; flex:1 1 118px; }
+  .specs div:last-child { border-right:0; }
+  .specs .k { font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); }
+  .specs .v { font-variant-numeric:tabular-nums; }
+
+  .links {
+    display:flex; flex-wrap:wrap; gap:8px 10px;
+    border-top:1px solid var(--rule-soft); padding-top:12px;
+  }
+  .links a, .links span.tel {
+    font-family:var(--mono); font-size:12.5px;
+    border:1px solid var(--rule); background:var(--paper);
+    padding:5px 10px; text-decoration:none; color:var(--accent);
+    display:inline-block;
+  }
+  .links a:hover { border-color:var(--accent); }
+  .links span.tel { color:var(--ink-mid); }
+
+  .risk { border-top:1px solid var(--rule-soft); padding-top:11px; font-size:13.5px; color:var(--ink-mid); max-width:78ch; }
+  .risk b {
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--fail);
+    display:block; margin-bottom:3px; font-weight:400;
+  }
+
+  .alert {
+    border:1px solid var(--rule); border-left:3px solid var(--warn);
+    background:var(--raised); padding:17px 19px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .alert.stop { border-left-color:var(--fail); }
+  .alert-t { font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--warn); }
+  .alert.stop .alert-t { color:var(--fail); }
+  .alert p { color:var(--ink-mid); max-width:76ch; }
+  .alert strong { color:var(--ink); }
+
+  .scroller { overflow-x:auto; border:1px solid var(--rule); background:var(--raised); }
+  table { border-collapse:collapse; width:100%; min-width:640px; font-size:13.5px; }
+  thead th {
+    text-align:left; font-family:var(--mono); font-weight:400; font-size:10.5px;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft);
+    padding:11px; border-bottom:2px solid var(--ink); background:var(--sunk); white-space:nowrap;
+  }
+  tbody td { padding:12px 11px; border-bottom:1px solid var(--rule-soft); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:0; }
+  .num { font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .pname { font-weight:600; color:var(--ink); display:block; }
+  .pmeta { color:var(--ink-soft); font-size:12px; display:block; margin-top:3px; }
+
+  footer { border-top:1px solid var(--rule); padding-top:20px; font-size:12.5px; color:var(--ink-soft); max-width:78ch; display:flex; flex-direction:column; gap:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span>Thanksgiving &middot; Thursday 26 November 2026</span>
+      <span>Sacramento</span>
+      <span>Eight of us</span>
+    </div>
+    <h1>Where we eat Thanksgiving dinner</h1>
+    <hr class="rule-heavy">
+    <p class="prose" style="color:var(--ink-mid);font-size:17px;">
+      Three genuinely different ways to do this, all researched, all with links so you can look
+      for yourself. Have a click through and say what appeals. Nothing has been booked and nobody
+      has been called yet &mdash; this is for deciding, not confirming.
+    </p>
+  </header>
+
+  <section class="creed">
+    <span class="t">The one thing that actually matters</span>
+    <p>
+      A comfortable, tasty, stress-free Thanksgiving dinner for eight, where none of the eight
+      of us has to cook, serve, or clean up.
+    </p>
+  </section>
+
+  <section class="sec">
+    <p class="prose" style="color:var(--ink-mid);">
+      Everything else is negotiable. All three options below clear that bar &mdash; private chefs
+      and restaurants both include serving and cleaning up as standard. So they don't really
+      compete on quality of food. They compete on <strong>how long the day lasts and who's in the
+      room</strong>. That's the actual choice.
+    </p>
+  </section>
+
+  <!-- OPTION A -->
+  <section class="sec">
+    <div class="sec-head">
+      <h2><span class="tag">Option A</span>A historic house, just for the day</h2>
+      <hr class="rule-hair">
+      <p class="note">
+        Rent a period home by the hour and bring a chef into it. Both places below give a discount
+        on long bookings, so the plan would be to take the house for <strong>eight hours</strong>
+        &mdash; late morning through the evening &mdash; rather than just a dinner slot. We'd sleep
+        elsewhere.
+      </p>
+    </div>
+
+    <div class="dossiers">
+      <article class="dos pick">
+        <div class="dos-head">
+          <span class="chip pick">Favourite</span>
+          <h3>Downtown Victorian, Tri-Level Home</h3>
+          <span class="cost">about $884 for the day</span>
+        </div>
+        <p>
+          A 3,500 sq ft Victorian over three floors in <strong>Midtown</strong>, with a drawing
+          room, a proper dining room, a study and a garden. Rated 5.0 from 19 bookings. Of
+          everything found, this is the one that actually looks like Thanksgiving in an old house.
+        </p>
+        <blockquote>
+          &ldquo;Soaring ceilings, intricate crown moldings, spectacular chandeliers, and original
+          hardwood floors&rdquo; &mdash; plus bay windows, an elegant staircase and period
+          furnishings. There's a video tour on the listing.
+        </blockquote>
+        <div class="specs">
+          <div><span class="k">Rate</span><span class="v">$130/hr</span></div>
+          <div><span class="k">Minimum</span><span class="v">3 hrs</span></div>
+          <div><span class="k">8+ hours</span><span class="v">15% off</span></div>
+          <div><span class="k">Holds</span><span class="v">25 people</span></div>
+          <div><span class="k">Rating</span><span class="v">5.0 (19)</span></div>
+        </div>
+        <div class="links">
+          <a href="https://www.peerspace.com/pages/listings/65d7e78ad910581451c1fb6c">See the listing and photos &rarr;</a>
+        </div>
+        <div class="risk">
+          <b>Still need to check</b>
+          The listing confirms there's a kitchen but doesn't say whether a private chef is allowed
+          to cook in it, or whether they'll take a booking on Thanksgiving Day at all. Both need
+          asking before this is real.
+        </div>
+      </article>
+
+      <article class="dos">
+        <div class="dos-head">
+          <h3>Restored 1917 Firehouse</h3>
+          <span class="cost">about $1,224 for the day</span>
+        </div>
+        <p>
+          An actual 1917 fire station in <strong>Curtis Park</strong>, converted into a 3,700 sq ft
+          home. The old engine garage is now a big kitchen-dining-living room with a backlit onyx
+          bar &mdash; so it's the better choice if we care more about the chef having room to work
+          than about the wallpaper.
+        </p>
+        <p>
+          The character is odd rather than elegant: the <strong>firepole is still there</strong>,
+          along with craftsman woodwork, two sets of firehouse doors on the front, and a boy scout
+          badge inlaid into the floor. Also has three bedrooms.
+        </p>
+        <div class="specs">
+          <div><span class="k">Rate</span><span class="v">$170/hr</span></div>
+          <div><span class="k">Minimum</span><span class="v">4 hrs</span></div>
+          <div><span class="k">8+ hours</span><span class="v">10% off</span></div>
+          <div><span class="k">Holds</span><span class="v">30 people</span></div>
+          <div><span class="k">Rating</span><span class="v">5.0 (18)</span></div>
+        </div>
+        <div class="links">
+          <a href="https://www.peerspace.com/pages/listings/64f90f978bb254000e910a4d">See the listing and photos &rarr;</a>
+        </div>
+        <div class="risk">
+          <b>Still need to check</b>
+          The kitchen and dining room are one open space, not a separate dining room. It has three
+          bedrooms though &mdash; worth asking if we could also sleep there, which would roll
+          Options A and C into one booking.
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- OPTION B -->
+  <section class="sec">
+    <div class="sec-head">
+      <h2><span class="tag">Option B</span>At Mom's or Sis's, with a chef</h2>
+      <hr class="rule-hair">
+      <p class="note">
+        No venue at all &mdash; a private chef comes to the house. The booking site describes it
+        plainly: <strong>&ldquo;Chef shops for ingredients, cooks in your kitchen, you enjoy the
+        meal, and chef cleans up.&rdquo;</strong> All four chefs below are based in downtown
+        Sacramento and booked through the same number. Most bookings cancel free with 48 hours'
+        notice.
+      </p>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>Chef</th><th>Cooks</th><th>Per person</th><th>For eight</th><th>Rating</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pname">Chef Maggie</span></td>
+            <td>Asian, sushi, Italian &mdash; <strong>and Thanksgiving</strong></td>
+            <td class="num">$89&ndash;119</td><td class="num">$712&ndash;952</td><td class="num">5.0 (41)</td>
+          </tr>
+          <tr>
+            <td><span class="pname">Chef Karen</span></td>
+            <td>French fine dining, Creole, surf &amp; turf</td>
+            <td class="num">$89&ndash;129</td><td class="num">$712&ndash;1,032</td><td class="num">4.8 (134)</td>
+          </tr>
+          <tr>
+            <td><span class="pname">Chef Esh-Marie</span></td>
+            <td>Coastal, surf &amp; turf, holiday menus</td>
+            <td class="num">$89&ndash;129</td><td class="num">$712&ndash;1,032</td><td class="num">4.9 (32)</td>
+          </tr>
+          <tr>
+            <td><span class="pname">Chef Josh</span></td>
+            <td>Hibachi &mdash; fun, but not a traditional Thanksgiving</td>
+            <td class="num">$60</td><td class="num">$480</td><td class="num">4.8 (10)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="dossiers">
+      <article class="dos pick">
+        <div class="dos-head">
+          <span class="chip pick">Best bet</span>
+          <h3>Chef Maggie</h3>
+          <span class="cost">$712&ndash;952</span>
+        </div>
+        <p>
+          The only chef in Sacramento who <strong>lists Thanksgiving as a speciality</strong>, and
+          the best rated &mdash; a straight 5.0 across 41 bookings. Someone who has cooked a lot of
+          Thanksgivings knows where the timing goes wrong, which matters more on this particular
+          day than how many cuisines they can do.
+        </p>
+        <div class="links">
+          <a href="https://www.cozymeal.com/sacramento/personal-chefs">Browse all Sacramento chefs &rarr;</a>
+          <span class="tel">Book by phone &middot; 916-272-0334</span>
+        </div>
+        <div class="risk">
+          <b>Still need to check</b>
+          Whether she's free on Thanksgiving Day itself and whether there's a holiday surcharge
+          &mdash; those prices are the normal rate. Also worth describing Mom's oven and hob to her
+          before booking.
+        </div>
+      </article>
+
+      <article class="dos">
+        <div class="dos-head">
+          <h3>If we want to go properly over the top</h3>
+          <span class="cost">price on asking</span>
+        </div>
+        <p>
+          Chef Andy Suarez does bespoke tasting menus at <strong>8, 12 or 15 courses</strong>
+          &mdash; caviar, A5 wagyu, langoustine, venison, chocolate soufflé. This is a different
+          kind of evening to Thanksgiving, but it's there if that appeals more.
+        </p>
+        <div class="links">
+          <a href="https://www.chefandysuarez.com/luxury-tasting-menu">See the tasting menus &rarr;</a>
+        </div>
+        <div class="risk">
+          <b>Unconfirmed</b>
+          His site doesn't actually say he covers Sacramento, doesn't publish prices, and doesn't
+          confirm whether serving and cleanup are included. Treat this as a maybe, not an option.
+        </div>
+      </article>
+
+      <article class="dos">
+        <div class="dos-head">
+          <h3>If the problem is fitting eight round a table</h3>
+          <span class="cost">$150&ndash;300</span>
+        </div>
+        <p>
+          Worth saying: this is fixable. Party hire firms deliver a table for eight with linens,
+          glasses, china and cutlery, set it up and take it away afterwards. A
+          <strong>60-inch round seats eight</strong> as standard. So &ldquo;we haven't got the
+          space&rdquo; might just mean &ldquo;we haven't got the table.&rdquo;
+        </p>
+        <div class="links">
+          <a href="https://www.elitepartyrent.com/table-and-chair-rental/">Elite Party Rentals &rarr;</a>
+          <span class="tel">916-852-1225</span>
+        </div>
+        <div class="risk">
+          <b>Worth measuring first</b>
+          A 60-inch round needs roughly ten feet by ten feet clear, so chairs can push back and
+          someone can serve around it.
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- OPTION C -->
+  <section class="sec">
+    <div class="sec-head">
+      <h2><span class="tag">Option C</span>All of us under one roof, for three nights</h2>
+      <hr class="rule-hair">
+      <p class="note">
+        The only option that gets us <strong>days together instead of hours</strong>, and the only
+        one where Mom could stay too rather than driving home. The historic inns do lodging, venue
+        and kitchen in a single booking.
+      </p>
+    </div>
+
+    <div class="dossiers">
+      <article class="dos pick">
+        <div class="dos-head">
+          <span class="chip pick">Best of these</span>
+          <h3>Vizcaya Sacramento</h3>
+          <span class="cost">rates not published</span>
+        </div>
+        <p>
+          An 1889 mansion with a Victorian tower and columned entrance, 6,500 sq ft, in
+          <strong>Midtown</strong>. <strong>Eight en-suite bedrooms</strong> across the main house
+          and carriage house, including a 900 sq ft penthouse suite &mdash; so everyone, Mom
+          included, could sleep there.
+        </p>
+        <p>
+          The big advantage: they have <strong>their own kitchen team and build menus to
+          order</strong>. No outside chef to organise, no strange kitchen, no asking permission to
+          bring caterers in.
+        </p>
+        <div class="links">
+          <a href="https://vizcayasacramento.com/">vizcayasacramento.com &rarr;</a>
+          <span class="tel">916-594-9285</span>
+          <span class="tel">frontdesk@vizcayasacramento.com</span>
+        </div>
+        <div class="risk">
+          <b>Still need to check</b>
+          There's <strong>no guest kitchen</strong>, so no making your own coffee or raiding
+          leftovers over four days. Rates aren't published anywhere. The two questions that decide
+          it: does their kitchen team work Thanksgiving Day, and can we book it as somewhere to
+          stay without signing an event contract?
+        </div>
+      </article>
+
+      <article class="dos">
+        <div class="dos-head">
+          <h3>Grand Island Mansion</h3>
+          <span class="cost">read the warning</span>
+        </div>
+        <p>
+          A restored 1920s estate on the river at Walnut Grove with <strong>11 period
+          bedrooms</strong>, its own kitchen doing California regional cooking, plated dinners and
+          an on-site bakery. On looks alone it's the most beautiful place found anywhere in this
+          search. About 35 minutes south of Sacramento.
+        </p>
+        <div class="specs">
+          <div><span class="k">Mansion fee</span><span class="v">$3,000</span></div>
+          <div><span class="k">Food minimum</span><span class="v">$8,000</span></div>
+          <div><span class="k">Works out at</span><span class="v">$1,375/head</span></div>
+        </div>
+        <div class="links">
+          <a href="https://grandislandmansion.com/">grandislandmansion.com &rarr;</a>
+          <a href="https://www.opentable.com/r/grand-island-mansion-walnut-grove">Their restaurant on OpenTable &rarr;</a>
+          <span class="tel">916-775-1705</span>
+        </div>
+        <div class="risk">
+          <b>Don't book this as an event</b>
+          Their events department wants a $3,000 room fee plus an <strong>$8,000 minimum spend on
+          food</strong> &mdash; that's wedding pricing and it works out around $1,375 each for
+          eight of us. But they also run an ordinary restaurant that takes OpenTable bookings and
+          does Sunday brunch. <strong>Book bedrooms and a restaurant table, not an event</strong>,
+          and it becomes affordable.
+        </div>
+      </article>
+
+      <article class="dos">
+        <div class="dos-head">
+          <h3>The Inn &amp; Spa at Parkside</h3>
+          <span class="cost">rates not published</span>
+        </div>
+        <p>
+          The historic Fong Mansion, built 1936, plus the Parkside Villa, downtown next to
+          Southside Park. Around twelve rooms. They host weddings and events regularly, so a
+          private catered dinner is routine for them rather than a special favour.
+        </p>
+        <div class="links">
+          <a href="https://www.innatparkside.com/">innatparkside.com &rarr;</a>
+          <span class="tel">916-658-1818</span>
+          <span class="tel">info@innatparkside.com</span>
+        </div>
+        <div class="risk">
+          <b>Almost nothing is published</b>
+          No room count, no rates, no dining capacity, no policy on buying out the whole place.
+          Everything here depends on one phone call.
+        </div>
+      </article>
+
+      <article class="dos">
+        <div class="dos-head">
+          <h3>Or just rent a house</h3>
+          <span class="cost">$1,018&ndash;2,518</span>
+        </div>
+        <p>
+          Eleven houses were available in the neighbourhoods we'd want, for these dates. Only
+          <strong>one confirms a dining table that actually seats eight</strong> &mdash; the Land
+          Park house, which says so four times in its own photo captions, including one calling it
+          a formal dining room. It's on both sites; <strong>Airbnb is $324 cheaper</strong> for the
+          identical house.
+        </p>
+        <div class="scroller">
+          <table>
+            <thead>
+              <tr><th>House</th><th>Where</th><th>Size</th><th>Seats 8?</th><th>Total</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="pname"><a href="https://www.airbnb.com/rooms/660848184980620189">Sacramento Retreat</a></span><span class="pmeta">4.94 from 194 stays &middot; gas cooker, dishwasher, real fireplace, pool</span></td>
+                <td>Land Park</td><td class="num">4 bed / 7 beds</td>
+                <td><span class="chip ok">Yes</span></td><td class="num">$2,518</td>
+              </tr>
+              <tr>
+                <td><span class="pname"><a href="https://www.airbnb.com/rooms/1737272827589416048">Historic Victorian</a></span><span class="pmeta">Brand new listing &middot; fireplace and pool table, but no dishwasher</span></td>
+                <td>Midtown</td><td class="num">3 bed / 5 beds</td>
+                <td><span class="chip warn">Not stated</span></td><td class="num">$1,118</td>
+              </tr>
+              <tr>
+                <td><span class="pname"><a href="https://www.vrbo.com/3502651">LOVE VILLA Midtown</a></span><span class="pmeta">9.2 from 46 stays &middot; only on VRBO, not Airbnb</span></td>
+                <td>Midtown</td><td class="num">3 bed / 4 beds</td>
+                <td><span class="chip warn">Not stated</span></td><td class="num">$1,018</td>
+              </tr>
+              <tr>
+                <td><span class="pname"><a href="https://www.airbnb.com/rooms/1612450190756304556">5 bed single storey</a></span><span class="pmeta">5.0 from 14 stays &middot; step-free throughout, sleeps exactly 8</span></td>
+                <td>Curtis Park</td><td class="num">5 bed / 5 queens</td>
+                <td><span class="chip warn">Not stated</span></td><td class="num">$1,580</td>
+              </tr>
+              <tr>
+                <td><span class="pname"><a href="https://www.airbnb.com/rooms/1110965989397796620">Casa Bella</a></span><span class="pmeta">4.85 from 26 stays &middot; gas cooker and dishwasher</span></td>
+                <td>Downtown</td><td class="num">4 bed / 7 beds</td>
+                <td><span class="chip warn">Not stated</span></td><td class="num">$1,309</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="risk">
+          <b>Why these come last</b>
+          A rented house still leaves us with a kitchen we have to staff ourselves and a dining
+          room nobody has measured. The inns turn up with a kitchen team already in the building.
+          Houses only win if we want the place completely to ourselves.
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="alert stop">
+      <span class="alert-t">Before anyone gets attached to one</span>
+      <p>
+        <strong>Nothing is booked and nobody has been rung yet.</strong> Every price here is one
+        that was published or listed online, not a quote. The same question hangs over all three
+        options: <strong>does each place actually work on Thanksgiving Day, and what do they charge
+        extra for it?</strong> Beds stay available for months. Kitchens on Thanksgiving do not
+        &mdash; so the dinner is the bit to decide first.
+      </p>
+    </div>
+    <div class="alert">
+      <span class="alert-t">One question for everyone</span>
+      <p>
+        The dates are <strong>Wednesday 25 to Saturday 28 November</strong>, which is three
+        nights. If people would rather stay through Sunday that's four nights and all the lodging
+        prices change. Worth settling early.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      Prices found 18&ndash;19 August 2026 &mdash; 99 days before Thanksgiving. House totals include
+      all fees for three nights, 25&ndash;28 November 2026. Chef prices are per person multiplied by
+      eight and don't include any holiday surcharge. Venue day rates apply each listing's own
+      long-booking discount to an eight-hour hire. Holiday prices move, so treat all of it as a
+      snapshot rather than a quote.
+    </p>
+    <p>A temporary planning page. Unlisted, but not password protected &mdash; anyone with the link can read it.</p>
+  </footer>
+
+</div>
+</body>
+</html>
