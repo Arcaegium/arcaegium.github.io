@@ -91,6 +91,8 @@
 
   /* ── A/B choice: two boxes side by side ── */
   .choice { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .choice > .box { min-width:0; }
+  .scroller { max-width:100%; }
   @media (max-width:880px) { .choice { grid-template-columns:1fr; } }
   .box { border:2px solid var(--ink); background:var(--raised);
          padding:22px clamp(15px,2vw,24px); display:flex; flex-direction:column; gap:13px; }
