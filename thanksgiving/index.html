@@ -150,6 +150,17 @@
   .rname { font-weight:600; color:var(--ink); }
   .fine { font-family:var(--mono); font-size:12.5px; color:var(--ink-soft); }
 
+  /* ── phone refinements ── */
+  @media (max-width:620px) {
+    .wrap { gap:38px; }
+    h2 .tag { display:block; width:fit-content; margin:0 0 8px 0; }
+    .question .q .tag { display:block; width:fit-content; margin:0 0 8px 0; }
+    .links a, .links span.tel { flex:1 1 auto; text-align:center; }
+    .box, .question { padding:18px 14px; }
+    table { font-size:15px; }
+    thead th, tbody td { padding:10px 8px; }
+  }
+
   footer { border-top:2px solid var(--rule); padding-top:22px; font-size:15.5px;
            color:var(--ink-soft); max-width:74ch; display:flex;
            flex-direction:column; gap:12px; }
@@ -232,8 +243,8 @@
           Neither is stated on the listing.
         </div>
         <div class="links">
-          <a href="https://www.peerspace.com/pages/listings/64f90f978bb254000e910a4d">The house &rarr;</a>
-          <a href="https://www.cozymeal.com/sacramento/personal-chefs">The chefs &rarr;</a>
+          <a href="https://www.peerspace.com/pages/listings/64f90f978bb254000e910a4d" target="_blank" rel="noopener">The house &rarr;</a>
+          <a href="https://www.cozymeal.com/sacramento/personal-chefs" target="_blank" rel="noopener">The chefs &rarr;</a>
           <span class="tel">916-272-0334</span>
         </div>
       </div>
@@ -255,7 +266,7 @@
           are. One phone call gets the number.
         </div>
         <div class="links">
-          <a href="https://vizcayasacramento.com/">Vizcaya &rarr;</a>
+          <a href="https://vizcayasacramento.com/" target="_blank" rel="noopener">Vizcaya &rarr;</a>
           <span class="tel">916-594-9285</span>
           <span class="tel">frontdesk@vizcayasacramento.com</span>
         </div>
@@ -280,8 +291,8 @@
         gets 10% off.
       </p>
       <div class="links">
-        <a href="https://www.vagaro.com/us02/parksideinnandspa/services">Menu &amp; booking &rarr;</a>
-        <a href="https://www.innatparkside.com/spa">The spa &rarr;</a>
+        <a href="https://www.vagaro.com/us02/parksideinnandspa/services" target="_blank" rel="noopener">Menu &amp; booking &rarr;</a>
+        <a href="https://www.innatparkside.com/spa" target="_blank" rel="noopener">The spa &rarr;</a>
         <span class="tel">916-658-1818</span>
       </div>
       <p class="fine">
@@ -310,8 +321,8 @@
         10:30&ndash;1:30, booked on OpenTable, $50 a head to cancel. Dress code unpublished; ask.
       </p>
       <div class="links">
-        <a href="https://www.opentable.com/r/grand-island-mansion-walnut-grove">Book on OpenTable &rarr;</a>
-        <a href="https://grandislandmansion.com/brunch-at-the-mansion/">Brunch details &rarr;</a>
+        <a href="https://www.opentable.com/r/grand-island-mansion-walnut-grove" target="_blank" rel="noopener">Book on OpenTable &rarr;</a>
+        <a href="https://grandislandmansion.com/brunch-at-the-mansion/" target="_blank" rel="noopener">Brunch details &rarr;</a>
         <span class="tel">916-775-1705</span>
       </div>
     </div>
@@ -346,8 +357,8 @@
           a night.
         </p>
         <div class="links">
-          <a href="https://vizcayasacramento.com/hotel">Vizcaya rooms &rarr;</a>
-          <a href="https://www.booking.com/hotel/us/irenehouse.html">IreneHouse &rarr;</a>
+          <a href="https://vizcayasacramento.com/hotel" target="_blank" rel="noopener">Vizcaya rooms &rarr;</a>
+          <a href="https://www.booking.com/hotel/us/irenehouse.html" target="_blank" rel="noopener">IreneHouse &rarr;</a>
         </div>
       </div>
 
@@ -365,17 +376,17 @@
           <table>
             <thead><tr><th>Hotel</th><th>Night</th><th>Score</th></tr></thead>
             <tbody>
-              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/irenehouse.html">IreneHouse Victorian Inn</a></td>
+              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/irenehouse.html" target="_blank" rel="noopener">IreneHouse Victorian Inn</a></td>
                   <td class="num">$135</td><td class="num">9.2 (294)</td></tr>
-              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/inn-off-capitol-park-an-ascend-collection.html">Inn Off Capitol Park</a></td>
+              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/inn-off-capitol-park-an-ascend-collection.html" target="_blank" rel="noopener">Inn Off Capitol Park</a></td>
                   <td class="num">$129</td><td class="num">8.5 (361)</td></tr>
-              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/tapestry-by-hilton-the-fort-sutter-sacramento-ca.html">Fort Sutter (Hilton)</a></td>
+              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/tapestry-by-hilton-the-fort-sutter-sacramento-ca.html" target="_blank" rel="noopener">Fort Sutter (Hilton)</a></td>
                   <td class="num">$165</td><td class="num">8.9 (138)</td></tr>
-              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/embassy-suites-sacramento-riverfront-promenade.html">Embassy Suites Riverfront</a></td>
+              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/embassy-suites-sacramento-riverfront-promenade.html" target="_blank" rel="noopener">Embassy Suites Riverfront</a></td>
                   <td class="num">$193</td><td class="num">9.1 (1,059)</td></tr>
-              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/the-citizen-autograph-collection.html">The Citizen (1920s, grand)</a></td>
+              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/the-citizen-autograph-collection.html" target="_blank" rel="noopener">The Citizen (1920s, grand)</a></td>
                   <td class="num">$210</td><td class="num">8.4 (336)</td></tr>
-              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/kimpton-sawyer.html">Kimpton Sawyer</a></td>
+              <tr><td class="rname"><a href="https://www.booking.com/hotel/us/kimpton-sawyer.html" target="_blank" rel="noopener">Kimpton Sawyer</a></td>
                   <td class="num">$209</td><td class="num">8.7 (405)</td></tr>
             </tbody>
           </table>
