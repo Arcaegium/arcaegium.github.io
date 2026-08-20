@@ -161,6 +161,37 @@
   .num { font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; }
   .rname { font-weight:600; color:var(--ink); }
 
+  /* two-column dinner comparison */
+  .versus { display:grid; grid-template-columns:1fr 1fr; gap:2px;
+            background:var(--rule); border:1px solid var(--rule); }
+  @media (max-width:880px) { .versus { grid-template-columns:1fr; } }
+  .opt { background:var(--raised); padding:24px clamp(16px,2vw,26px);
+         display:flex; flex-direction:column; gap:14px; }
+  .opt-label { font-family:var(--mono); font-size:12.5px; letter-spacing:.1em;
+               text-transform:uppercase; color:var(--accent); font-weight:700; }
+  .opt h3 { font-family:var(--display); font-weight:400; font-size:26px; line-height:1.2; }
+  .opt-cost { font-family:var(--mono); font-size:27px; font-weight:700;
+              font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+  .opt-cost small { display:block; font-size:13px; font-weight:400;
+                    color:var(--ink-soft); letter-spacing:0; margin-top:2px; }
+  .opt-img { display:block; line-height:0; overflow:hidden;
+             border:1px solid var(--rule); background:var(--sunk); }
+  .opt-img img { width:100%; aspect-ratio:16/10; object-fit:cover; display:block;
+                 transition:transform .35s ease; }
+  .opt-img:hover img { transform:scale(1.04); }
+  @media (prefers-reduced-motion:reduce) {
+    .opt-img img { transition:none; } .opt-img:hover img { transform:none; }
+  }
+  .rows { display:flex; flex-direction:column; }
+  .row { display:flex; flex-direction:column; gap:3px; padding:11px 0;
+         border-top:1px solid var(--rule-soft); }
+  .row .k { font-family:var(--mono); font-size:11.5px; letter-spacing:.08em;
+            text-transform:uppercase; color:var(--ink-soft); }
+  .row .v { font-size:16.5px; color:var(--ink-mid); }
+  .row .v strong { color:var(--ink); }
+  .row.flag .k { color:var(--fail); }
+  .opt .links { margin-top:auto; }
+
   footer { border-top:2px solid var(--rule); padding-top:22px; font-size:15.5px;
            color:var(--ink-soft); max-width:74ch; display:flex;
            flex-direction:column; gap:12px; }
@@ -216,127 +247,99 @@
   <!-- ─────────── FIREHOUSE ─────────── -->
   <section class="sec">
     <div class="sec-head">
-      <h2><span class="tag">The main event</span>Where we eat</h2>
+      <h2><span class="tag">The decision</span>Where we eat</h2>
       <hr class="rule-hair">
       <p class="note">
-        Two ways to do this, and they land within about twenty dollars of each other. Pick on which
-        evening sounds better, not on price. Both need to be dog-free and to seat eight properly,
-        and both do.
+        Two ways to do Thanksgiving dinner. They cost within about twenty dollars of each other,
+        so this is genuinely a choice about which evening we'd rather have &mdash; not about money.
+        Same details in the same order for both, so it's easy to compare.
       </p>
     </div>
 
-    <div class="card pick">
-      <div class="card-head">
-        <h3>The 1917 Firehouse, with a chef brought in</h3>
-        <span class="cost">~$2,260 done well</span>
+    <div class="versus">
+
+      <div class="opt">
+        <span class="opt-label">Option one</span>
+        <h3>The 1917 Firehouse, with a chef we hire</h3>
+        <span class="opt-cost">~$2,260<small>$1,224 for the house + about $1,030 for a chef</small></span>
+        <a class="opt-img" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/ov2sueakzydvlvc2eeeg" target="_blank" rel="noopener">
+          <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_1200/ov2sueakzydvlvc2eeeg" alt="The converted 1917 firehouse in Curtis Park" loading="lazy"></a>
+        <div class="rows">
+          <div class="row"><span class="k">How long we get it</span>
+            <span class="v"><strong>Eight hours</strong> &mdash; the whole house, late morning
+            through the evening</span></div>
+          <div class="row"><span class="k">The place</span>
+            <span class="v">A real 1917 fire station in Curtis Park, 3,700 sq ft. The old engine
+            garage is now one big kitchen-dining-living room with an onyx bar. Firepole still
+            there.</span></div>
+          <div class="row"><span class="k">Who cooks</span>
+            <span class="v">A chef we book. <strong>Chef Maggie</strong> lists Thanksgiving as a
+            speciality, 5.0 from 41 bookings. <strong>Chef Karen</strong> does French fine dining,
+            4.8 from 134.</span></div>
+          <div class="row"><span class="k">Service</span>
+            <span class="v">Chef shops, cooks, serves and clears up. Nobody at the table lifts a
+            finger.</span></div>
+          <div class="row"><span class="k">Room for eight</span>
+            <span class="v">Yes &mdash; the space holds 30</span></div>
+          <div class="row"><span class="k">Distance from the dogs</span>
+            <span class="v">About 2.3 miles</span></div>
+          <div class="row flag"><span class="k">Still to confirm</span>
+            <span class="v">Whether they allow an <strong>outside chef to cook</strong> there, and
+            whether they'll take a Thanksgiving Day booking at all. Neither is stated.</span></div>
+        </div>
+        <div class="links">
+          <a href="https://www.peerspace.com/pages/listings/64f90f978bb254000e910a4d">The house &rarr;</a>
+          <a href="https://www.cozymeal.com/sacramento/personal-chefs">The chefs &rarr;</a>
+          <span class="tel">916-272-0334</span>
+        </div>
       </div>
 
-      <div class="gallery">
-        <a class="shot hero" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/ov2sueakzydvlvc2eeeg" target="_blank" rel="noopener">
-          <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_1200/ov2sueakzydvlvc2eeeg" alt="The converted 1917 firehouse" loading="lazy"></a>
-        <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/jrhzrf8wyi6ezlpu7hq7" target="_blank" rel="noopener">
-          <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/jrhzrf8wyi6ezlpu7hq7" alt="Inside the firehouse conversion" loading="lazy"></a>
-        <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/ftop3vnaiafjnfaigllo" target="_blank" rel="noopener">
-          <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/ftop3vnaiafjnfaigllo" alt="Kitchen and dining area" loading="lazy"></a>
-        <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/lapofexq2vldio0tzqe1" target="_blank" rel="noopener">
-          <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/lapofexq2vldio0tzqe1" alt="Living space" loading="lazy"></a>
-        <a class="shot" href="https://img.peerspace.com/image/upload/f_auto,q_auto,w_2000/amgeebm8ejpan9o6tz27" target="_blank" rel="noopener">
-          <img src="https://img.peerspace.com/image/upload/f_auto,q_auto,w_600/amgeebm8ejpan9o6tz27" alt="Further view of the firehouse" loading="lazy"></a>
+      <div class="opt">
+        <span class="opt-label">Option two</span>
+        <h3>Vizcaya, their kitchen and their mansion</h3>
+        <span class="opt-cost">~$2,230<small>$750 room + $71 a head plated + drinks + 22% service</small></span>
+        <a class="opt-img" href="https://static.showit.co/1200/9oomU8WoSZ-hJs0tffLGWQ/69903/batchelor-0001.jpg" target="_blank" rel="noopener">
+          <img src="https://static.showit.co/1200/9oomU8WoSZ-hJs0tffLGWQ/69903/batchelor-0001.jpg" alt="Vizcaya, an 1889 mansion in Midtown Sacramento" loading="lazy"></a>
+        <div class="rows">
+          <div class="row"><span class="k">How long we get it</span>
+            <span class="v"><strong>Three hours</strong> in the Coach House &mdash; a dinner, not
+            a day</span></div>
+          <div class="row"><span class="k">The place</span>
+            <span class="v">An 1889 mansion with a Victorian tower and columned entrance, 6,500 sq
+            ft in Midtown. The Coach House takes small events; the mansion proper costs
+            more.</span></div>
+          <div class="row"><span class="k">Who cooks</span>
+            <span class="v">Their own kitchen team. Nothing to arrange, nobody to vet, no
+            unfamiliar kitchen.</span></div>
+          <div class="row"><span class="k">Service</span>
+            <span class="v">Plated and served by their staff. Same deal &mdash; nobody at the table
+            does anything.</span></div>
+          <div class="row"><span class="k">Room for eight</span>
+            <span class="v">Yes &mdash; the Coach House takes up to 40</span></div>
+          <div class="row"><span class="k">Distance from the dogs</span>
+            <span class="v">About 1.5 miles &mdash; and we may be sleeping upstairs anyway</span></div>
+          <div class="row flag"><span class="k">Still to confirm</span>
+            <span class="v">Their rate card says <strong>food minimums apply on top of the room
+            fee</strong> without saying what they are. That's the one number missing.</span></div>
+        </div>
+        <div class="links">
+          <a href="https://vizcayasacramento.com/">Vizcaya &rarr;</a>
+          <span class="tel">916-594-9285</span>
+          <span class="tel">frontdesk@vizcayasacramento.com</span>
+        </div>
       </div>
-      <p class="gallery-note">Click any photo for full size &mdash; there are more on the listing.</p>
 
+    </div>
+
+    <div class="alert">
+      <span class="alert-t">The difference that actually matters</span>
       <p>
-        A genuine 1917 fire station in Curtis Park, converted into a 3,700 sq ft home. The old
-        engine garage is now a large kitchen-dining-living room with a backlit onyx bar, which
-        means real room for a chef to work. The firepole is still there, along with craftsman
-        woodwork, two sets of firehouse doors on the front, and a boy scout badge inlaid into the
-        floor.
+        Not the money &mdash; they're twenty dollars apart. It's that
+        <strong>the firehouse gives us the whole day and Vizcaya gives us dinner</strong>. Eight
+        hours of somewhere that's ours, with a chef arriving partway through, is a different sort
+        of Thanksgiving to three hours of proper plated service in a mansion. Both are good. They
+        aren't the same thing.
       </p>
-      <p>
-        Since the dogs are fine penned for the day, <strong>take the full eight hours</strong>
-        &mdash; the long-booking discount means late morning through the evening costs barely more
-        than a dinner slot.
-      </p>
-      <div class="specs">
-        <div><span class="k">Rate</span><span class="v">$170/hr</span></div>
-        <div><span class="k">Full day</span><span class="v">~$1,224</span></div>
-        <div><span class="k">8+ hours</span><span class="v">10% off</span></div>
-        <div><span class="k">Holds</span><span class="v">30 people</span></div>
-        <div><span class="k">Rating</span><span class="v">5.0 (18)</span></div>
-        <div><span class="k">From East Sac</span><span class="v">~2.3 mi</span></div>
-      </div>
-      <p>
-        Eight hours of the house is <strong>$1,224</strong>. A chef at the top of their range for
-        eight is about <strong>$1,030</strong> &mdash; so roughly <strong>$2,260</strong> all in,
-        which is level with a plated dinner at Vizcaya.
-      </p>
-      <div class="links">
-        <a href="https://www.peerspace.com/pages/listings/64f90f978bb254000e910a4d">See the full listing &rarr;</a>
-      </div>
-      <div class="risk">
-        <b>The one question left</b>
-        The listing doesn't say whether an <strong>outside chef is allowed to cook there</strong>,
-        or whether they'll take a Thanksgiving Day booking. Both need asking through Peerspace
-        before this is real.
-      </div>
-    </div>
-
-    <div class="sec-head" style="margin-top:6px;">
-      <h3>The chef</h3>
-      <p class="note">
-        Booked through Cozymeal on one number. The fee covers shopping, cooking, serving and
-        cleaning up. Chef Maggie is the only one who lists Thanksgiving as a speciality; Chef Karen
-        is the one to ask about French fine dining if we want the meal itself to be the event.
-        Most bookings cancel free with 48 hours' notice.
-      </p>
-    </div>
-    <div class="scroller">
-      <table>
-        <thead><tr><th>Chef</th><th>Cooks</th><th>Per person</th><th>For eight</th><th>Rating</th></tr></thead>
-        <tbody>
-          <tr><td class="rname">Chef Maggie</td><td>Asian, sushi, Italian &mdash; <strong>and Thanksgiving</strong></td>
-              <td class="num">$89&ndash;119</td><td class="num">$712&ndash;952</td><td class="num">5.0 (41)</td></tr>
-          <tr><td class="rname">Chef Karen</td><td>French fine dining, Creole, surf &amp; turf</td>
-              <td class="num">$89&ndash;129</td><td class="num">$712&ndash;1,032</td><td class="num">4.8 (134)</td></tr>
-          <tr><td class="rname">Chef Esh-Marie</td><td>Coastal, surf &amp; turf, holiday menus</td>
-              <td class="num">$89&ndash;129</td><td class="num">$712&ndash;1,032</td><td class="num">4.9 (32)</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="links">
-      <a href="https://www.cozymeal.com/sacramento/personal-chefs">See all chefs and menus &rarr;</a>
-      <span class="tel">916-272-0334</span>
-    </div>
-
-    <div class="card">
-      <div class="card-head">
-        <h3>Vizcaya &mdash; their kitchen, their mansion</h3>
-        <span class="cost">~$2,230 done well</span>
-      </div>
-      <p>
-        They have their own kitchen team, so there's no outside chef to organise, no unfamiliar
-        kitchen and no permission to negotiate &mdash; and we'd already be sleeping upstairs. Their
-        published rates are built for weddings, so it isn't cheap, but done properly it comes out
-        <strong>within about twenty dollars of the firehouse with a hired chef</strong>. The choice
-        is which evening you'd rather have, not which costs less.
-      </p>
-      <div class="specs">
-        <div><span class="k">Facility fee</span><span class="v">$1,400&ndash;3,700</span></div>
-        <div><span class="k">Coach House</span><span class="v">$750 / 3 hrs</span></div>
-        <div><span class="k">Plated dinner</span><span class="v">$57&ndash;71 pp</span></div>
-        <div><span class="k">Beverages</span><span class="v">$29&ndash;50 pp</span></div>
-        <div><span class="k">Service charge</span><span class="v">22% + tax</span></div>
-      </div>
-      <div class="risk">
-        <b>What that buys, and the one unknown</b>
-        The Coach House takes small events up to 40 people at $750 for three hours. Add the top
-        plated tier at $71 a head, prime rib at $5 more, the full beverage package at $50, then the
-        22% service charge and tax &mdash; <strong>about $2,230 for the eight of us, plated and
-        served in an 1889 mansion</strong>. Taking the mansion proper for the evening instead of
-        the Coach House pushes it nearer $3,300. The unknown: their card says
-        <strong>&ldquo;food minimums in addition to facility fees will apply&rdquo;</strong>
-        without saying what they are. That's the question to ask.
-      </div>
     </div>
   </section>
 
