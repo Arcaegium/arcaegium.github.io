@@ -123,8 +123,9 @@
               border:2px solid var(--ink); background:var(--raised);
               padding:22px clamp(15px,2vw,26px);
               display:flex; flex-direction:column; gap:13px; }
-  .question .q { font-family:var(--display); font-size:clamp(23px,3vw,29px);
-                 line-height:1.25; text-wrap:balance; }
+  .question .q { font-family:var(--display); font-weight:400;
+                 font-size:clamp(23px,3vw,29px); line-height:1.25; text-wrap:balance; }
+  .question + .question { margin-top:18px; }
   .question p { color:var(--ink-mid); font-size:17px; max-width:66ch; }
   .question strong { color:var(--ink); }
   .question .price { font-family:var(--mono); font-size:21px; font-weight:700;
@@ -277,10 +278,19 @@
     </div>
   </section>
 
-  <!-- ════════ QUESTION 1 ════════ -->
+  <!-- ════════ THE OPTIONAL EXTRAS ════════ -->
   <section class="sec">
+    <div class="sec-head">
+      <h2><span class="tag">Yes or no</span>Two extras, if we fancy them</h2>
+      <hr class="rule-hair">
+      <p class="note">
+        Neither of these is a fork in the road &mdash; they're each a straight yes or no, and
+        they don't affect the dinner either way. Say no to both and the plan still works.
+      </p>
+    </div>
+
     <div class="question">
-      <h2 class="q"><span class="tag">Yes or no</span>Do we spa?</h2>
+      <h3 class="q">Do we spa?</h3>
       <p>
         A boutique day spa inside the 1936 Fong Mansion downtown &mdash; infrared sauna, steam
         room, relaxation lounge, robes and sandals. Their concierge builds group bookings, so it's
@@ -302,12 +312,9 @@
         inside 24 hours are charged in full.
       </p>
     </div>
-  </section>
 
-  <!-- ════════ QUESTION 2 ════════ -->
-  <section class="sec">
     <div class="question">
-      <h2 class="q"><span class="tag">Yes or no</span>Do we brunch on another day?</h2>
+      <h3 class="q">Do we brunch on another day?</h3>
       <p>
         Grand Island Mansion &mdash; a restored 1920s estate on the river at Walnut Grove, 35
         minutes south, and the most striking building of everywhere we looked. Champagne buffet:
